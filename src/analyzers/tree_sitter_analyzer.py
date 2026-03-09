@@ -387,3 +387,85 @@ class LanguageRouter:
                 results.append(analysis)
 
         return results
+# ── YAML Analyzer ─────────────────────────────────────────────────────────────
+
+class YAMLAnalyzer:
+    """Parses YAML configs: dbt schema.yml, Airflow DAGs, Prefect flows."""
+
+    def analyze(self, path: Path, source: str) -> Dict[str, Any]:
+        result = {
+            "type": "unknown",
+            "models": [],
+            "sources": [],
+            "dag_tasks": [],
+        }
+        try:
+            data = yaml.safe_load(source)
+        except yaml.YAMLError:
+            result["parse_error"] = "invalid yaml"
+            return result
+
+        if not isinstance(data, dict):
+            return result
+
+        if "models" in data:
+            result["type"] = "dbt_schema"
+            for model in data.get("models", []) or []:
+                if isinstance(model, dict) and "name" in model:
+                    result["models"].append(model["name"])
+
+        if "sources" in data:
+            result["type"] = "dbt_sources"
+            for src in data.get("sources", []) or []:
+                if isinstance(src, dict):
+                    schema = src.get("name", "")
+                    for tbl in src.get("tables", []) or []:
+                        if isinstance(tbl, dict) and "name" in tbl:
+                            result["sources"].append(f"{schema}.{tbl['name']}")
+
+        return result
+
+
+# ── Notebook Analyzer ─────────────────────────────────────────────────────────
+
+class NotebookAnalyzer:
+    """Extracts code cells from Jupyter notebooks and re-analyzes as Python."""
+
+    def __init__(self):
+        self.python_analyzer = PythonAnalyzer()
+
+    def analyze(self, path: Path, source: str) -> Dict[str, Any]:
+        result = {
+            "cells": 0,
+            "code_cells": 0,
+            "imports": [],
+            "exports": [],
+            "functions": [],
+        }
+        try:
+            nb = json.loads(source)
+        except json.JSONDecodeError:
+            result["parse_error"] = "invalid json"
+            return result
+
+        cells = nb.get("cells", [])
+        result["cells"] = len(cells)
+        combined_code = []
+
+        for cell in cells:
+            if cell.get("cell_type") == "code":
+                result["code_cells"] += 1
+                src = cell.get("source", [])
+                if isinstance(src, list):
+                    combined_code.extend(src)
+                elif isinstance(src, str):
+                    combined_code.append(src)
+
+        full_source = "\n".join(combined_code)
+        py_result = self.python_analyzer.analyze(path, full_source)
+        result.update({
+            "imports": py_result["imports"],
+            "exports": py_result["exports"],
+            "functions": py_result["functions"],
+        })
+        return result
