@@ -469,3 +469,54 @@ class NotebookAnalyzer:
             "functions": py_result["functions"],
         })
         return result
+    # ── SQL Analyzer ──────────────────────────────────────────────────────────────
+
+SQL_FROM_RE = re.compile(r'\bFROM\s+([\w.`"\[\]]+)', re.IGNORECASE)
+SQL_JOIN_RE = re.compile(r'\bJOIN\s+([\w.`"\[\]]+)', re.IGNORECASE)
+SQL_INTO_RE = re.compile(r'\bINSERT\s+INTO\s+([\w.`"\[\]]+)', re.IGNORECASE)
+SQL_CREATE_RE = re.compile(
+    r'\bCREATE\s+(?:OR\s+REPLACE\s+)?(?:TABLE|VIEW|MATERIALIZED\s+VIEW)\s+(?:IF\s+NOT\s+EXISTS\s+)?([\w.`"\[\]]+)',
+    re.IGNORECASE
+)
+SQL_CTE_RE = re.compile(r'\bWITH\s+([\w]+)\s+AS\s*\(', re.IGNORECASE)
+DBT_REF_RE = re.compile(r"\{\{\s*ref\(['\"](\w+)['\"]\)\s*\}\}")
+DBT_SOURCE_RE = re.compile(r"\{\{\s*source\(['\"](\w+)['\"],\s*['\"](\w+)['\"]\)\s*\}\}")
+
+
+def _clean_table_name(raw: str) -> str:
+    return raw.strip('`"[]').split(".")[-1].lower()
+
+
+class SQLAnalyzer:
+    """Regex-based SQL dependency extractor."""
+
+    def analyze(self, path: Path, source: str) -> Dict[str, Any]:
+        result = {
+            "source_tables": [],
+            "target_tables": [],
+            "cte_names": [],
+            "dbt_refs": [],
+            "dbt_sources": [],
+            "raw_sql": source,
+        }
+
+        ctes = {m.group(1).lower() for m in SQL_CTE_RE.finditer(source)}
+        result["cte_names"] = list(ctes)
+
+        result["dbt_refs"] = [m.group(1) for m in DBT_REF_RE.finditer(source)]
+        result["dbt_sources"] = [
+            f"{m.group(1)}.{m.group(2)}" for m in DBT_SOURCE_RE.finditer(source)
+        ]
+
+        from_tables = {_clean_table_name(m.group(1)) for m in SQL_FROM_RE.finditer(source)}
+        join_tables = {_clean_table_name(m.group(1)) for m in SQL_JOIN_RE.finditer(source)}
+        source_tables = (from_tables | join_tables) - ctes
+        source_tables.update(r.lower() for r in result["dbt_refs"])
+        source_tables.update(s.split(".")[-1].lower() for s in result["dbt_sources"])
+        result["source_tables"] = sorted(source_tables)
+
+        into_tables = {_clean_table_name(m.group(1)) for m in SQL_INTO_RE.finditer(source)}
+        create_tables = {_clean_table_name(m.group(1)) for m in SQL_CREATE_RE.finditer(source)}
+        result["target_tables"] = sorted(into_tables | create_tables)
+
+        return result
