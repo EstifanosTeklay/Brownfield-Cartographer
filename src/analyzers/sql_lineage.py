@@ -1,5 +1,5 @@
 """
-SQL Lineage Analyzer: extracts table dependency graphs from SQL files.
+SQL Lineage Analyzer extracts table dependency graphs from SQL files.
 Handles: raw .sql files, dbt models (.sql with Jinja), dbt schema.yml.
 Uses the SQLAnalyzer from tree_sitter_analyzer as its parsing engine.
 Builds lineage entries (source_tables -> target_tables) for the Hydrologist.
