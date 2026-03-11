@@ -1,12 +1,15 @@
 """
 Data models for the Brownfield Cartographer knowledge graph.
-Using dataclasses for zero external dependencies.
+Uses Pydantic v2 for validation, serialization, and schema enforcement.
+All node and edge types align with the knowledge graph specification.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Tuple
 from enum import Enum
+from pydantic import BaseModel, Field, field_validator, model_validator
 
+
+# ── Enums ─────────────────────────────────────────────────────────────────────
 
 class Language(str, Enum):
     PYTHON = "python"
@@ -36,110 +39,308 @@ class TransformationType(str, Enum):
     UNKNOWN = "unknown"
 
 
-@dataclass
-class ModuleNode:
-    path: str                                  # relative path in repo
-    language: Language = Language.OTHER
-    purpose_statement: Optional[str] = None
-    domain_cluster: Optional[str] = None
-    complexity_score: float = 0.0
-    change_velocity_30d: int = 0              # commit count in last 30d
-    is_dead_code_candidate: bool = False
-    last_modified: Optional[str] = None
-    loc: int = 0                              # lines of code
-    imports: List[str] = field(default_factory=list)
-    exports: List[str] = field(default_factory=list)   # public functions/classes
-    docstring: Optional[str] = None
-    doc_drift_flag: bool = False              # docstring contradicts implementation
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "path": self.path,
-            "language": self.language.value,
-            "purpose_statement": self.purpose_statement,
-            "domain_cluster": self.domain_cluster,
-            "complexity_score": self.complexity_score,
-            "change_velocity_30d": self.change_velocity_30d,
-            "is_dead_code_candidate": self.is_dead_code_candidate,
-            "last_modified": self.last_modified,
-            "loc": self.loc,
-            "imports": self.imports,
-            "exports": self.exports,
-            "docstring": self.docstring,
-            "doc_drift_flag": self.doc_drift_flag,
-        }
-
-
-@dataclass
-class DatasetNode:
-    name: str
-    storage_type: StorageType = StorageType.UNKNOWN
-    schema_snapshot: Optional[Dict[str, str]] = None
-    freshness_sla: Optional[str] = None
-    owner: Optional[str] = None
-    is_source_of_truth: bool = False
-    path_or_table: Optional[str] = None
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "name": self.name,
-            "storage_type": self.storage_type.value,
-            "schema_snapshot": self.schema_snapshot,
-            "freshness_sla": self.freshness_sla,
-            "owner": self.owner,
-            "is_source_of_truth": self.is_source_of_truth,
-            "path_or_table": self.path_or_table,
-        }
-
-
-@dataclass
-class FunctionNode:
-    qualified_name: str                       # module.ClassName.method_name
-    parent_module: str
-    signature: str
-    purpose_statement: Optional[str] = None
-    call_count_within_repo: int = 0
-    is_public_api: bool = True
-    lineno: int = 0
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "qualified_name": self.qualified_name,
-            "parent_module": self.parent_module,
-            "signature": self.signature,
-            "purpose_statement": self.purpose_statement,
-            "call_count_within_repo": self.call_count_within_repo,
-            "is_public_api": self.is_public_api,
-            "lineno": self.lineno,
-        }
-
-
-@dataclass
-class TransformationNode:
-    id: str                                   # unique: source_file:lineno
-    source_datasets: List[str] = field(default_factory=list)
-    target_datasets: List[str] = field(default_factory=list)
-    transformation_type: TransformationType = TransformationType.UNKNOWN
-    source_file: str = ""
-    line_range: tuple = (0, 0)
-    sql_query: Optional[str] = None
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "id": self.id,
-            "source_datasets": self.source_datasets,
-            "target_datasets": self.target_datasets,
-            "transformation_type": self.transformation_type.value,
-            "source_file": self.source_file,
-            "line_range": list(self.line_range),
-            "sql_query": self.sql_query,
-        }
-
-
-# Edge type constants
 class EdgeType(str, Enum):
     IMPORTS = "IMPORTS"
     PRODUCES = "PRODUCES"
     CONSUMES = "CONSUMES"
     CALLS = "CALLS"
     CONFIGURES = "CONFIGURES"
+
+
+# ── Node Models ───────────────────────────────────────────────────────────────
+
+class ModuleNode(BaseModel):
+    """
+    Represents a source file (module) in the codebase.
+    Populated by the Surveyor agent.
+    """
+    path: str = Field(..., description="Relative path in repo")
+    language: Language = Field(default=Language.OTHER)
+    purpose_statement: Optional[str] = Field(
+        default=None,
+        description="LLM-generated purpose statement based on code"
+    )
+    domain_cluster: Optional[str] = Field(
+        default=None,
+        description="Inferred business domain e.g. ingestion, staging, serving"
+    )
+    complexity_score: float = Field(
+        default=0.0,
+        ge=0.0,
+        description="Cyclomatic complexity score"
+    )
+    change_velocity_30d: int = Field(
+        default=0,
+        ge=0,
+        description="Number of commits touching this file in last 30 days"
+    )
+    is_dead_code_candidate: bool = Field(
+        default=False,
+        description="True if no other module imports this file"
+    )
+    last_modified: Optional[str] = Field(
+        default=None,
+        description="ISO date of last git commit touching this file"
+    )
+    loc: int = Field(default=0, ge=0, description="Lines of code")
+    imports: List[str] = Field(
+        default_factory=list,
+        description="List of imported module paths"
+    )
+    exports: List[str] = Field(
+        default_factory=list,
+        description="List of public functions and class names"
+    )
+    docstring: Optional[str] = Field(
+        default=None,
+        description="Module-level docstring if present"
+    )
+    doc_drift_flag: bool = Field(
+        default=False,
+        description="True if docstring contradicts implementation"
+    )
+    decorators: List[str] = Field(
+        default_factory=list,
+        description="Decorators found on functions in this module"
+    )
+
+    @field_validator("path")
+    @classmethod
+    def normalize_path(cls, v: str) -> str:
+        """Normalize Windows backslashes to forward slashes."""
+        return v.replace("\\", "/")
+
+    @field_validator("complexity_score")
+    @classmethod
+    def round_complexity(cls, v: float) -> float:
+        return round(v, 2)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+
+    class Config:
+        use_enum_values = True
+
+
+class DatasetNode(BaseModel):
+    """
+    Represents a dataset, table, file, stream, or API endpoint.
+    Populated by the Hydrologist agent.
+    """
+    name: str = Field(..., description="Dataset or table name")
+    storage_type: StorageType = Field(default=StorageType.UNKNOWN)
+    schema_snapshot: Optional[Dict[str, str]] = Field(
+        default=None,
+        description="Column name to type mapping if available"
+    )
+    freshness_sla: Optional[str] = Field(
+        default=None,
+        description="Expected freshness e.g. daily, hourly"
+    )
+    owner: Optional[str] = Field(
+        default=None,
+        description="Team or system that owns this dataset"
+    )
+    is_source_of_truth: bool = Field(
+        default=False,
+        description="True if this is a raw source table"
+    )
+    path_or_table: Optional[str] = Field(
+        default=None,
+        description="Full path or qualified table name"
+    )
+
+    @field_validator("name")
+    @classmethod
+    def name_must_not_be_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Dataset name must not be empty")
+        return v.strip().lower()
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+
+    class Config:
+        use_enum_values = True
+
+
+class FunctionNode(BaseModel):
+    """
+    Represents a function or method in the codebase.
+    Populated by the Surveyor agent.
+    """
+    qualified_name: str = Field(
+        ...,
+        description="Fully qualified name e.g. src/utils.py::my_function"
+    )
+    parent_module: str = Field(
+        ...,
+        description="Relative path of the containing module"
+    )
+    signature: str = Field(
+        ...,
+        description="Function signature string"
+    )
+    purpose_statement: Optional[str] = Field(
+        default=None,
+        description="LLM-generated purpose statement"
+    )
+    call_count_within_repo: int = Field(
+        default=0,
+        ge=0,
+        description="Number of times this function is called within the repo"
+    )
+    is_public_api: bool = Field(
+        default=True,
+        description="False if function name starts with underscore"
+    )
+    lineno: int = Field(
+        default=0,
+        ge=0,
+        description="Line number where function is defined"
+    )
+    decorators: List[str] = Field(
+        default_factory=list,
+        description="List of decorator names on this function"
+    )
+
+    @field_validator("qualified_name")
+    @classmethod
+    def normalize_qualified_name(cls, v: str) -> str:
+        return v.replace("\\", "/")
+
+    @field_validator("parent_module")
+    @classmethod
+    def normalize_parent_module(cls, v: str) -> str:
+        return v.replace("\\", "/")
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+
+    class Config:
+        use_enum_values = True
+
+
+class TransformationNode(BaseModel):
+    """
+    Represents a data transformation operation.
+    Populated by the Hydrologist agent.
+    Links source datasets to target datasets.
+    """
+    id: str = Field(
+        ...,
+        description="Unique identifier: source_file:lineno"
+    )
+    source_datasets: List[str] = Field(
+        default_factory=list,
+        description="Input dataset names"
+    )
+    target_datasets: List[str] = Field(
+        default_factory=list,
+        description="Output dataset names"
+    )
+    transformation_type: TransformationType = Field(
+        default=TransformationType.UNKNOWN
+    )
+    source_file: str = Field(
+        default="",
+        description="Relative path of file containing this transformation"
+    )
+    line_range: Tuple[int, int] = Field(
+        default=(0, 0),
+        description="Start and end line numbers of the transformation"
+    )
+    sql_query: Optional[str] = Field(
+        default=None,
+        description="SQL query text if applicable, truncated to 500 chars"
+    )
+
+    @field_validator("source_file")
+    @classmethod
+    def normalize_source_file(cls, v: str) -> str:
+        return v.replace("\\", "/")
+
+    @field_validator("id")
+    @classmethod
+    def normalize_id(cls, v: str) -> str:
+        return v.replace("\\", "/")
+
+    @field_validator("sql_query")
+    @classmethod
+    def truncate_sql(cls, v: Optional[str]) -> Optional[str]:
+        if v and len(v) > 500:
+            return v[:500] + "..."
+        return v
+
+    @model_validator(mode="after")
+    def check_has_datasets(self) -> "TransformationNode":
+        if not self.source_datasets and not self.target_datasets:
+            raise ValueError(
+                "TransformationNode must have at least one source or target dataset"
+            )
+        return self
+
+    def to_dict(self) -> Dict[str, Any]:
+        data = self.model_dump()
+        data["line_range"] = list(self.line_range)
+        return data
+
+    class Config:
+        use_enum_values = True
+
+
+# ── Edge Models ───────────────────────────────────────────────────────────────
+
+class ImportEdge(BaseModel):
+    """IMPORTS: source_module imports target_module."""
+    source: str
+    target: str
+    edge_type: EdgeType = Field(default=EdgeType.IMPORTS)
+    weight: int = Field(default=1, ge=1)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+
+
+class ProducesEdge(BaseModel):
+    """PRODUCES: transformation produces dataset."""
+    source: str
+    target: str
+    edge_type: EdgeType = Field(default=EdgeType.PRODUCES)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+
+
+class ConsumesEdge(BaseModel):
+    """CONSUMES: dataset is consumed by transformation."""
+    source: str
+    target: str
+    edge_type: EdgeType = Field(default=EdgeType.CONSUMES)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+
+
+class CallsEdge(BaseModel):
+    """CALLS: function calls another function."""
+    source: str
+    target: str
+    edge_type: EdgeType = Field(default=EdgeType.CALLS)
+    caller: str = Field(default="")
+    callee: str = Field(default="")
+    lineno: int = Field(default=0, ge=0)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+
+
+class ConfiguresEdge(BaseModel):
+    """CONFIGURES: config file configures a module or pipeline."""
+    source: str
+    target: str
+    edge_type: EdgeType = Field(default=EdgeType.CONFIGURES)
+    weight: int = Field(default=1, ge=1)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
