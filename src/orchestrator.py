@@ -57,41 +57,58 @@ class Orchestrator:
 
         # ── Agent 1: Surveyor ──────────────────────────────────────────────────
         self._log("Running Agent 1: Surveyor (static structure analysis)...")
-        surveyor = Surveyor(self.kg, self.repo_path, verbose=self.verbose)
-        surveyor_stats = surveyor.run()
-        report["agents"]["surveyor"] = surveyor_stats
-
-        hubs = surveyor.get_hub_modules(5)
-        dead = surveyor.get_dead_code_candidates()
-        circulars = self.kg.find_circular_deps()
-
-        self._log(f"  Top hubs: {[h['path'] for h in hubs[:3]]}")
-        self._log(f"  Circular deps: {len(circulars)} found")
-        self._log(f"  Dead code candidates: {len(dead)}")
+        try:
+            surveyor = Surveyor(self.kg, self.repo_path, verbose=self.verbose)
+            surveyor_stats = surveyor.run()
+            report["agents"]["surveyor"] = surveyor_stats
+    
+            hubs = surveyor.get_hub_modules(5)
+            dead = surveyor.get_dead_code_candidates()
+            circulars = self.kg.find_circular_deps()
+    
+            self._log(f"  Top hubs: {[h['path'] for h in hubs[:3]]}")
+            self._log(f"  Circular deps: {len(circulars)} found")
+            self._log(f"  Dead code candidates: {len(dead)}")
+        except Exception as e:
+            self._log(f"  [Error] Surveyor failed: {e}")
+            report["agents"]["surveyor"] = {"status": "error", "error": str(e)}
+            hubs = []
+            dead = []
+            circulars = []
         print()
 
         # ── Agent 2: Hydrologist ───────────────────────────────────────────────
         self._log("Running Agent 2: Hydrologist (data lineage analysis)...")
-        hydrologist = Hydrologist(self.kg, self.repo_path, verbose=self.verbose)
-        hydro_stats = hydrologist.run()
-        report["agents"]["hydrologist"] = hydro_stats
-
-        sources = hydrologist.find_sources()
-        sinks = hydrologist.find_sinks()
-        self._log(f"  Data sources: {sources[:5]}")
-        self._log(f"  Data sinks: {sinks[:5]}")
+        try:
+            hydrologist = Hydrologist(self.kg, self.repo_path, verbose=self.verbose)
+            hydro_stats = hydrologist.run()
+            report["agents"]["hydrologist"] = hydro_stats
+    
+            sources = hydrologist.find_sources()
+            sinks = hydrologist.find_sinks()
+            self._log(f"  Data sources: {sources[:5]}")
+            self._log(f"  Data sinks: {sinks[:5]}")
+        except Exception as e:
+            self._log(f"  [Error] Hydrologist failed: {e}")
+            report["agents"]["hydrologist"] = {"status": "error", "error": str(e)}
+            sources = []
+            sinks = []
         print()
 
         # ── Agent 4: Archivist (no day-one answers without Semanticist) ────────
         self._log("Running Agent 4: Archivist (generating artifacts)...")
-        archivist = Archivist(
-            self.kg, self.repo_path, self.output_dir, verbose=self.verbose
-        )
-        archivist_stats = archivist.run(
-            day_one_answers=None,
-            domain_map=None,
-        )
-        report["agents"]["archivist"] = archivist_stats
+        try:
+            archivist = Archivist(
+                self.kg, self.repo_path, self.output_dir, verbose=self.verbose
+            )
+            archivist_stats = archivist.run(
+                day_one_answers=None,
+                domain_map=None,
+            )
+            report["agents"]["archivist"] = archivist_stats
+        except Exception as e:
+            self._log(f"  [Error] Archivist failed: {e}")
+            report["agents"]["archivist"] = {"status": "error", "error": str(e)}
         print()
 
         # ── Save knowledge graph ───────────────────────────────────────────────
