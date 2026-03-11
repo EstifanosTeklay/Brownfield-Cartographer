@@ -1,7 +1,7 @@
 """
-Orchestrator: wires Surveyor → Hydrologist in sequence,
-serializes outputs to .cartography/.
-This is the core of the interim submission pipeline.
+Orchestrator: wires Surveyor → Hydrologist → Archivist.
+Fast pipeline — no LLM calls.
+Use orchestrator_v2.py for full pipeline including Semanticist.
 """
 from __future__ import annotations
 import json
@@ -12,6 +12,7 @@ from typing import Dict, Any, Optional
 from src.graph.knowledge_graph import KnowledgeGraph
 from src.agents.surveyor import Surveyor
 from src.agents.hydrologist import Hydrologist
+from src.agents.archivist import Archivist
 
 
 CARTOGRAPHY_DIR = ".cartography"
@@ -19,12 +20,16 @@ CARTOGRAPHY_DIR = ".cartography"
 
 class Orchestrator:
     """
-    Runs the full analysis pipeline for a repository.
-    Phase 1 (interim): Surveyor + Hydrologist
-    Phase 2 (final): + Semanticist + Archivist
+    Phase 1 pipeline: Surveyor + Hydrologist + Archivist (no LLM).
+    For full LLM-powered analysis, use orchestrator_v2.Orchestrator.
     """
 
-    def __init__(self, repo_path: Path, output_dir: Optional[Path] = None, verbose: bool = True):
+    def __init__(
+        self,
+        repo_path: Path,
+        output_dir: Optional[Path] = None,
+        verbose: bool = True,
+    ):
         self.repo_path = repo_path.resolve()
         self.output_dir = output_dir or (self.repo_path / CARTOGRAPHY_DIR)
         self.verbose = verbose
@@ -36,7 +41,7 @@ class Orchestrator:
 
     def run_analysis(self) -> Dict[str, Any]:
         """
-        Run the full analysis pipeline.
+        Run the fast analysis pipeline.
         Returns a summary dict with stats from each agent.
         """
         start = time.time()
@@ -44,13 +49,13 @@ class Orchestrator:
         self._log(f"Output dir: {self.output_dir}")
         print()
 
-        report = {
+        report: Dict[str, Any] = {
             "repo_path": str(self.repo_path),
             "output_dir": str(self.output_dir),
             "agents": {},
         }
 
-        # ── Agent 1: Surveyor ─────────────────────────────────────────────
+        # ── Agent 1: Surveyor ──────────────────────────────────────────────────
         self._log("Running Agent 1: Surveyor (static structure analysis)...")
         surveyor = Surveyor(self.kg, self.repo_path, verbose=self.verbose)
         surveyor_stats = surveyor.run()
@@ -65,7 +70,7 @@ class Orchestrator:
         self._log(f"  Dead code candidates: {len(dead)}")
         print()
 
-        # ── Agent 2: Hydrologist ──────────────────────────────────────────
+        # ── Agent 2: Hydrologist ───────────────────────────────────────────────
         self._log("Running Agent 2: Hydrologist (data lineage analysis)...")
         hydrologist = Hydrologist(self.kg, self.repo_path, verbose=self.verbose)
         hydro_stats = hydrologist.run()
@@ -77,12 +82,23 @@ class Orchestrator:
         self._log(f"  Data sinks: {sinks[:5]}")
         print()
 
-        # ── Serialize outputs ─────────────────────────────────────────────
+        # ── Agent 4: Archivist (no day-one answers without Semanticist) ────────
+        self._log("Running Agent 4: Archivist (generating artifacts)...")
+        archivist = Archivist(
+            self.kg, self.repo_path, self.output_dir, verbose=self.verbose
+        )
+        archivist_stats = archivist.run(
+            day_one_answers=None,
+            domain_map=None,
+        )
+        report["agents"]["archivist"] = archivist_stats
+        print()
+
+        # ── Save knowledge graph ───────────────────────────────────────────────
         self._log(f"Saving knowledge graph to {self.output_dir}/")
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.kg.save(self.output_dir)
 
-        # Save analysis summary
         elapsed = time.time() - start
         report["elapsed_seconds"] = round(elapsed, 2)
         report["kg_stats"] = self.kg.stats()
