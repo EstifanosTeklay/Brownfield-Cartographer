@@ -6,7 +6,7 @@ A multi-agent codebase intelligence system for rapid FDE onboarding in productio
 
 ```bash
 # Clone the repo
-git clone <repo_url>
+git clone (https://github.com/EstifanosTeklay/Brownfield-Cartographer.git)
 cd brownfield-cartographer
 
 # Install dependencies (Python 3.11+)
