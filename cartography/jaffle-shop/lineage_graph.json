@@ -1,0 +1,654 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "name": "cents_to_dollars",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "cents_to_dollars"
+    },
+    {
+      "id": "macros/cents_to_dollars.sql::sql::0",
+      "source_datasets": [],
+      "target_datasets": [
+        "cents_to_dollars"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "macros/cents_to_dollars.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "generate_schema_name",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "generate_schema_name"
+    },
+    {
+      "id": "macros/generate_schema_name.sql::sql::0",
+      "source_datasets": [],
+      "target_datasets": [
+        "generate_schema_name"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "macros/generate_schema_name.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "orders",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "orders"
+    },
+    {
+      "name": "stg_customers",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "stg_customers"
+    },
+    {
+      "name": "customers",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "customers"
+    },
+    {
+      "id": "models/marts/customers.sql::sql::0",
+      "source_datasets": [
+        "orders",
+        "stg_customers"
+      ],
+      "target_datasets": [
+        "customers"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/marts/customers.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "stg_locations",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "stg_locations"
+    },
+    {
+      "name": "locations",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "locations"
+    },
+    {
+      "id": "models/marts/locations.sql::sql::0",
+      "source_datasets": [
+        "stg_locations"
+      ],
+      "target_datasets": [
+        "locations"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/marts/locations.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "metricflow_time_spine",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "metricflow_time_spine"
+    },
+    {
+      "id": "models/marts/metricflow_time_spine.sql::sql::0",
+      "source_datasets": [],
+      "target_datasets": [
+        "metricflow_time_spine"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/marts/metricflow_time_spine.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "stg_order_items",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "stg_order_items"
+    },
+    {
+      "name": "stg_orders",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "stg_orders"
+    },
+    {
+      "name": "stg_products",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "stg_products"
+    },
+    {
+      "name": "stg_supplies",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "stg_supplies"
+    },
+    {
+      "name": "order_items",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "order_items"
+    },
+    {
+      "id": "models/marts/order_items.sql::sql::0",
+      "source_datasets": [
+        "stg_order_items",
+        "stg_orders",
+        "stg_products",
+        "stg_supplies"
+      ],
+      "target_datasets": [
+        "order_items"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/marts/order_items.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "models/marts/orders.sql::sql::0",
+      "source_datasets": [
+        "order_items",
+        "stg_orders"
+      ],
+      "target_datasets": [
+        "orders"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/marts/orders.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "products",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "products"
+    },
+    {
+      "id": "models/marts/products.sql::sql::0",
+      "source_datasets": [
+        "stg_products"
+      ],
+      "target_datasets": [
+        "products"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/marts/products.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "supplies",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "supplies"
+    },
+    {
+      "id": "models/marts/supplies.sql::sql::0",
+      "source_datasets": [
+        "stg_supplies"
+      ],
+      "target_datasets": [
+        "supplies"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/marts/supplies.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "raw_customers",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": "ecom",
+      "is_source_of_truth": true,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "raw_customers"
+    },
+    {
+      "name": "raw_orders",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": "ecom",
+      "is_source_of_truth": true,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "raw_orders"
+    },
+    {
+      "name": "raw_items",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": "ecom",
+      "is_source_of_truth": true,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "raw_items"
+    },
+    {
+      "name": "raw_stores",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": "ecom",
+      "is_source_of_truth": true,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "raw_stores"
+    },
+    {
+      "name": "raw_products",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": "ecom",
+      "is_source_of_truth": true,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "raw_products"
+    },
+    {
+      "name": "raw_supplies",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": "ecom",
+      "is_source_of_truth": true,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "raw_supplies"
+    },
+    {
+      "id": "models/staging/stg_customers.sql::sql::0",
+      "source_datasets": [
+        "raw_customers"
+      ],
+      "target_datasets": [
+        "stg_customers"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/staging/stg_customers.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "models/staging/stg_locations.sql::sql::0",
+      "source_datasets": [
+        "raw_stores"
+      ],
+      "target_datasets": [
+        "stg_locations"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/staging/stg_locations.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "models/staging/stg_order_items.sql::sql::0",
+      "source_datasets": [
+        "raw_items"
+      ],
+      "target_datasets": [
+        "stg_order_items"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/staging/stg_order_items.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "models/staging/stg_orders.sql::sql::0",
+      "source_datasets": [
+        "raw_orders"
+      ],
+      "target_datasets": [
+        "stg_orders"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/staging/stg_orders.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "models/staging/stg_products.sql::sql::0",
+      "source_datasets": [
+        "raw_products"
+      ],
+      "target_datasets": [
+        "stg_products"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/staging/stg_products.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "models/staging/stg_supplies.sql::sql::0",
+      "source_datasets": [
+        "raw_supplies"
+      ],
+      "target_datasets": [
+        "stg_supplies"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "models/staging/stg_supplies.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    }
+  ],
+  "edges": [
+    {
+      "edge_type": "PRODUCES",
+      "source": "macros/cents_to_dollars.sql::sql::0",
+      "target": "cents_to_dollars"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "macros/generate_schema_name.sql::sql::0",
+      "target": "generate_schema_name"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "orders",
+      "target": "models/marts/customers.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_customers",
+      "target": "models/marts/customers.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/marts/customers.sql::sql::0",
+      "target": "customers"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_locations",
+      "target": "models/marts/locations.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/marts/locations.sql::sql::0",
+      "target": "locations"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/marts/metricflow_time_spine.sql::sql::0",
+      "target": "metricflow_time_spine"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_order_items",
+      "target": "models/marts/order_items.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_orders",
+      "target": "models/marts/order_items.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_orders",
+      "target": "models/marts/orders.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_products",
+      "target": "models/marts/order_items.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_products",
+      "target": "models/marts/products.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_supplies",
+      "target": "models/marts/order_items.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_supplies",
+      "target": "models/marts/supplies.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "order_items",
+      "target": "models/marts/orders.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/marts/order_items.sql::sql::0",
+      "target": "order_items"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/marts/orders.sql::sql::0",
+      "target": "orders"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/marts/products.sql::sql::0",
+      "target": "products"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/marts/supplies.sql::sql::0",
+      "target": "supplies"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "raw_customers",
+      "target": "models/staging/stg_customers.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "raw_orders",
+      "target": "models/staging/stg_orders.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "raw_items",
+      "target": "models/staging/stg_order_items.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "raw_stores",
+      "target": "models/staging/stg_locations.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "raw_products",
+      "target": "models/staging/stg_products.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "raw_supplies",
+      "target": "models/staging/stg_supplies.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/staging/stg_customers.sql::sql::0",
+      "target": "stg_customers"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/staging/stg_locations.sql::sql::0",
+      "target": "stg_locations"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/staging/stg_order_items.sql::sql::0",
+      "target": "stg_order_items"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/staging/stg_orders.sql::sql::0",
+      "target": "stg_orders"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/staging/stg_products.sql::sql::0",
+      "target": "stg_products"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "models/staging/stg_supplies.sql::sql::0",
+      "target": "stg_supplies"
+    }
+  ]
+}

@@ -1,0 +1,1240 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "name": "`",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "`"
+    },
+    {
+      "name": "bigquery",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "bigquery"
+    },
+    {
+      "name": "taxi",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "taxi"
+    },
+    {
+      "id": "03-data-warehouse/big_query.sql::sql::0",
+      "source_datasets": [
+        "`",
+        "bigquery",
+        "taxi"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "03-data-warehouse/big_query.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "03-data-warehouse/big_query_hw.sql::sql::0",
+      "source_datasets": [
+        "`"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "03-data-warehouse/big_query_hw.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "03-data-warehouse/big_query_ml.sql::sql::0",
+      "source_datasets": [
+        "`"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "03-data-warehouse/big_query_ml.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "pyarrow",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "pyarrow"
+    },
+    {
+      "id": "03-data-warehouse/extras/web_to_gcs.py::py_dataflow",
+      "source_datasets": [],
+      "target_datasets": [
+        "pyarrow"
+      ],
+      "transformation_type": "transform",
+      "source_file": "03-data-warehouse/extras/web_to_gcs.py",
+      "line_range": [
+        0,
+        89
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "get_trip_duration_minutes",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "get_trip_duration_minutes"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/macros/get_trip_duration_minutes.sql::sql::0",
+      "source_datasets": [],
+      "target_datasets": [
+        "get_trip_duration_minutes"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/macros/get_trip_duration_minutes.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "get_vendor_data",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "get_vendor_data"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/macros/get_vendor_data.sql::sql::0",
+      "source_datasets": [],
+      "target_datasets": [
+        "get_vendor_data"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/macros/get_vendor_data.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "safe_cast",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "safe_cast"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/macros/safe_cast.sql::sql::0",
+      "source_datasets": [],
+      "target_datasets": [
+        "safe_cast"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/macros/safe_cast.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "int_trips_unioned",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "int_trips_unioned"
+    },
+    {
+      "name": "payment_type_lookup",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "payment_type_lookup"
+    },
+    {
+      "name": "int_trips",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "int_trips"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips.sql::sql::0",
+      "source_datasets": [
+        "int_trips_unioned",
+        "payment_type_lookup"
+      ],
+      "target_datasets": [
+        "int_trips"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "stg_green_tripdata",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "stg_green_tripdata"
+    },
+    {
+      "name": "stg_yellow_tripdata",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "stg_yellow_tripdata"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips_unioned.sql::sql::0",
+      "source_datasets": [
+        "stg_green_tripdata",
+        "stg_yellow_tripdata"
+      ],
+      "target_datasets": [
+        "int_trips_unioned"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips_unioned.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "fct_trips",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "fct_trips"
+    },
+    {
+      "name": "dim_vendors",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "dim_vendors"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/models/marts/dim_vendors.sql::sql::0",
+      "source_datasets": [
+        "fct_trips"
+      ],
+      "target_datasets": [
+        "dim_vendors"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/models/marts/dim_vendors.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "taxi_zone_lookup",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "taxi_zone_lookup"
+    },
+    {
+      "name": "dim_zones",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "dim_zones"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/models/marts/dim_zones.sql::sql::0",
+      "source_datasets": [
+        "taxi_zone_lookup"
+      ],
+      "target_datasets": [
+        "dim_zones"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/models/marts/dim_zones.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/models/marts/fct_trips.sql::sql::0",
+      "source_datasets": [
+        "dim_zones",
+        "int_trips"
+      ],
+      "target_datasets": [
+        "fct_trips"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/models/marts/fct_trips.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "fct_monthly_zone_revenue",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "fct_monthly_zone_revenue"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/models/marts/reporting/fct_monthly_zone_revenue.sql::sql::0",
+      "source_datasets": [
+        "fct_trips"
+      ],
+      "target_datasets": [
+        "fct_monthly_zone_revenue"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/models/marts/reporting/fct_monthly_zone_revenue.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "green_tripdata",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": "raw",
+      "is_source_of_truth": true,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "green_tripdata"
+    },
+    {
+      "name": "yellow_tripdata",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": "raw",
+      "is_source_of_truth": true,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "yellow_tripdata"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_green_tripdata.sql::sql::0",
+      "source_datasets": [
+        "green_tripdata"
+      ],
+      "target_datasets": [
+        "stg_green_tripdata"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_green_tripdata.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_yellow_tripdata.sql::sql::0",
+      "source_datasets": [
+        "yellow_tripdata"
+      ],
+      "target_datasets": [
+        "stg_yellow_tripdata"
+      ],
+      "transformation_type": "sql_select",
+      "source_file": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_yellow_tripdata.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "<spark_dynamic:34>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<spark_dynamic:34>"
+    },
+    {
+      "name": "<spark_dynamic:28>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<spark_dynamic:28>"
+    },
+    {
+      "name": "overwrite",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "overwrite"
+    },
+    {
+      "id": "06-batch/code/06_spark_sql.py::py_dataflow",
+      "source_datasets": [
+        "<spark_dynamic:34>",
+        "<spark_dynamic:28>"
+      ],
+      "target_datasets": [
+        "overwrite"
+      ],
+      "transformation_type": "transform",
+      "source_file": "06-batch/code/06_spark_sql.py",
+      "line_range": [
+        28,
+        107
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "<spark_dynamic:30>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<spark_dynamic:30>"
+    },
+    {
+      "name": "<spark_dynamic:36>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<spark_dynamic:36>"
+    },
+    {
+      "name": "<spark_write_dynamic:110>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<spark_write_dynamic:110>"
+    },
+    {
+      "id": "06-batch/code/06_spark_sql_big_query.py::py_dataflow",
+      "source_datasets": [
+        "<spark_dynamic:30>",
+        "<spark_dynamic:36>"
+      ],
+      "target_datasets": [
+        "<spark_write_dynamic:110>",
+        "bigquery"
+      ],
+      "transformation_type": "transform",
+      "source_file": "06-batch/code/06_spark_sql_big_query.py",
+      "line_range": [
+        30,
+        110
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "<spark_dynamic:16>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<spark_dynamic:16>"
+    },
+    {
+      "id": "07-streaming/extras/python/streams-example/pyspark/streaming.py::py_dataflow",
+      "source_datasets": [
+        "<spark_dynamic:16>"
+      ],
+      "target_datasets": [],
+      "transformation_type": "transform",
+      "source_file": "07-streaming/extras/python/streams-example/pyspark/streaming.py",
+      "line_range": [
+        16,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "id": "07-streaming/extras/python/streams-example/redpanda/streaming.py::py_dataflow",
+      "source_datasets": [
+        "<spark_dynamic:16>"
+      ],
+      "target_datasets": [],
+      "transformation_type": "transform",
+      "source_file": "07-streaming/extras/python/streams-example/redpanda/streaming.py",
+      "line_range": [
+        16,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "<dynamic:16>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<dynamic:16>"
+    },
+    {
+      "id": "07-streaming/workshop/src/producers/producer.py::py_dataflow",
+      "source_datasets": [
+        "<dynamic:16>"
+      ],
+      "target_datasets": [],
+      "transformation_type": "transform",
+      "source_file": "07-streaming/workshop/src/producers/producer.py",
+      "line_range": [
+        16,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "download_dataset_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "download_dataset_task"
+    },
+    {
+      "name": "format_to_parquet_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "format_to_parquet_task"
+    },
+    {
+      "id": "cohorts/2022/week_2_data_ingestion/airflow/dags/data_ingestion_gcs_dag.py::airflow::download_dataset_task>>format_to_parquet_task",
+      "source_datasets": [
+        "download_dataset_task"
+      ],
+      "target_datasets": [
+        "format_to_parquet_task"
+      ],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2022/week_2_data_ingestion/airflow/dags/data_ingestion_gcs_dag.py",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "local_to_gcs_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "local_to_gcs_task"
+    },
+    {
+      "name": "bigquery_external_table_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "bigquery_external_table_task"
+    },
+    {
+      "id": "cohorts/2022/week_2_data_ingestion/airflow/dags/data_ingestion_gcs_dag.py::airflow::local_to_gcs_task>>bigquery_external_table_task",
+      "source_datasets": [
+        "local_to_gcs_task"
+      ],
+      "target_datasets": [
+        "bigquery_external_table_task"
+      ],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2022/week_2_data_ingestion/airflow/dags/data_ingestion_gcs_dag.py",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "wget_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "wget_task"
+    },
+    {
+      "name": "ingest_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "ingest_task"
+    },
+    {
+      "id": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/data_ingestion_local.py::airflow::wget_task>>ingest_task",
+      "source_datasets": [
+        "wget_task"
+      ],
+      "target_datasets": [
+        "ingest_task"
+      ],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/data_ingestion_local.py",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "<dynamic:18>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<dynamic:18>"
+    },
+    {
+      "name": "replace",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "replace"
+    },
+    {
+      "name": "append",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "append"
+    },
+    {
+      "id": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/ingest_script.py::py_dataflow",
+      "source_datasets": [
+        "<dynamic:18>"
+      ],
+      "target_datasets": [
+        "replace",
+        "append"
+      ],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/ingest_script.py",
+      "line_range": [
+        18,
+        44
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "upload_to_gcs_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "upload_to_gcs_task"
+    },
+    {
+      "id": "cohorts/2022/week_2_data_ingestion/airflow/extras/data_ingestion_gcs_dag_ex2.py::airflow::download_dataset_task>>upload_to_gcs_task",
+      "source_datasets": [
+        "download_dataset_task"
+      ],
+      "target_datasets": [
+        "upload_to_gcs_task"
+      ],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2022/week_2_data_ingestion/airflow/extras/data_ingestion_gcs_dag_ex2.py",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "id": "cohorts/2022/week_2_data_ingestion/homework/solution.py::airflow::download_dataset_task>>format_to_parquet_task",
+      "source_datasets": [
+        "download_dataset_task"
+      ],
+      "target_datasets": [
+        "format_to_parquet_task"
+      ],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2022/week_2_data_ingestion/homework/solution.py",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "rm_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "rm_task"
+    },
+    {
+      "id": "cohorts/2022/week_2_data_ingestion/homework/solution.py::airflow::local_to_gcs_task>>rm_task",
+      "source_datasets": [
+        "local_to_gcs_task"
+      ],
+      "target_datasets": [
+        "rm_task"
+      ],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2022/week_2_data_ingestion/homework/solution.py",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "move_files_gcs_task",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "move_files_gcs_task"
+    },
+    {
+      "id": "cohorts/2022/week_3_data_warehouse/airflow/dags/gcs_to_bq_dag.py::airflow::move_files_gcs_task>>bigquery_external_table_task",
+      "source_datasets": [
+        "move_files_gcs_task"
+      ],
+      "target_datasets": [
+        "bigquery_external_table_task"
+      ],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2022/week_3_data_warehouse/airflow/dags/gcs_to_bq_dag.py",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "<spark_dynamic:22>",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "<spark_dynamic:22>"
+    },
+    {
+      "id": "cohorts/2023/week_6_stream_processing/streaming_confluent.py::py_dataflow",
+      "source_datasets": [
+        "<spark_dynamic:22>"
+      ],
+      "target_datasets": [],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2023/week_6_stream_processing/streaming_confluent.py",
+      "line_range": [
+        22,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    },
+    {
+      "name": "./.dlt/secrets.toml",
+      "storage_type": "file",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "./.dlt/secrets.toml"
+    },
+    {
+      "id": "cohorts/2025/workshops/dynamic_load_dlt.py::py_dataflow",
+      "source_datasets": [
+        "./.dlt/secrets.toml"
+      ],
+      "target_datasets": [],
+      "transformation_type": "transform",
+      "source_file": "cohorts/2025/workshops/dynamic_load_dlt.py",
+      "line_range": [
+        17,
+        0
+      ],
+      "sql_query": null,
+      "node_type": "transformation"
+    }
+  ],
+  "edges": [
+    {
+      "edge_type": "CONSUMES",
+      "source": "`",
+      "target": "03-data-warehouse/big_query.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "`",
+      "target": "03-data-warehouse/big_query_hw.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "`",
+      "target": "03-data-warehouse/big_query_ml.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "bigquery",
+      "target": "03-data-warehouse/big_query.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "taxi",
+      "target": "03-data-warehouse/big_query.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "03-data-warehouse/extras/web_to_gcs.py::py_dataflow",
+      "target": "pyarrow"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/macros/get_trip_duration_minutes.sql::sql::0",
+      "target": "get_trip_duration_minutes"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/macros/get_vendor_data.sql::sql::0",
+      "target": "get_vendor_data"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/macros/safe_cast.sql::sql::0",
+      "target": "safe_cast"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "int_trips_unioned",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "payment_type_lookup",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "int_trips",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/marts/fct_trips.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips.sql::sql::0",
+      "target": "int_trips"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_green_tripdata",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips_unioned.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "stg_yellow_tripdata",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips_unioned.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips_unioned.sql::sql::0",
+      "target": "int_trips_unioned"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "fct_trips",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/marts/dim_vendors.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "fct_trips",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/marts/reporting/fct_monthly_zone_revenue.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/models/marts/dim_vendors.sql::sql::0",
+      "target": "dim_vendors"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "taxi_zone_lookup",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/marts/dim_zones.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "dim_zones",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/marts/fct_trips.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/models/marts/dim_zones.sql::sql::0",
+      "target": "dim_zones"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/models/marts/fct_trips.sql::sql::0",
+      "target": "fct_trips"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/models/marts/reporting/fct_monthly_zone_revenue.sql::sql::0",
+      "target": "fct_monthly_zone_revenue"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "green_tripdata",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_green_tripdata.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "yellow_tripdata",
+      "target": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_yellow_tripdata.sql::sql::0"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_green_tripdata.sql::sql::0",
+      "target": "stg_green_tripdata"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_yellow_tripdata.sql::sql::0",
+      "target": "stg_yellow_tripdata"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<spark_dynamic:34>",
+      "target": "06-batch/code/06_spark_sql.py::py_dataflow"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<spark_dynamic:28>",
+      "target": "06-batch/code/06_spark_sql.py::py_dataflow"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "06-batch/code/06_spark_sql.py::py_dataflow",
+      "target": "overwrite"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<spark_dynamic:30>",
+      "target": "06-batch/code/06_spark_sql_big_query.py::py_dataflow"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<spark_dynamic:36>",
+      "target": "06-batch/code/06_spark_sql_big_query.py::py_dataflow"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "06-batch/code/06_spark_sql_big_query.py::py_dataflow",
+      "target": "<spark_write_dynamic:110>"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "06-batch/code/06_spark_sql_big_query.py::py_dataflow",
+      "target": "bigquery"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<spark_dynamic:16>",
+      "target": "07-streaming/extras/python/streams-example/pyspark/streaming.py::py_dataflow"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<spark_dynamic:16>",
+      "target": "07-streaming/extras/python/streams-example/redpanda/streaming.py::py_dataflow"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<dynamic:16>",
+      "target": "07-streaming/workshop/src/producers/producer.py::py_dataflow"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "download_dataset_task",
+      "target": "cohorts/2022/week_2_data_ingestion/airflow/dags/data_ingestion_gcs_dag.py::airflow::download_dataset_task>>format_to_parquet_task"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "download_dataset_task",
+      "target": "cohorts/2022/week_2_data_ingestion/airflow/extras/data_ingestion_gcs_dag_ex2.py::airflow::download_dataset_task>>upload_to_gcs_task"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "download_dataset_task",
+      "target": "cohorts/2022/week_2_data_ingestion/homework/solution.py::airflow::download_dataset_task>>format_to_parquet_task"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_2_data_ingestion/airflow/dags/data_ingestion_gcs_dag.py::airflow::download_dataset_task>>format_to_parquet_task",
+      "target": "format_to_parquet_task"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "local_to_gcs_task",
+      "target": "cohorts/2022/week_2_data_ingestion/airflow/dags/data_ingestion_gcs_dag.py::airflow::local_to_gcs_task>>bigquery_external_table_task"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "local_to_gcs_task",
+      "target": "cohorts/2022/week_2_data_ingestion/homework/solution.py::airflow::local_to_gcs_task>>rm_task"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_2_data_ingestion/airflow/dags/data_ingestion_gcs_dag.py::airflow::local_to_gcs_task>>bigquery_external_table_task",
+      "target": "bigquery_external_table_task"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "wget_task",
+      "target": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/data_ingestion_local.py::airflow::wget_task>>ingest_task"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/data_ingestion_local.py::airflow::wget_task>>ingest_task",
+      "target": "ingest_task"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<dynamic:18>",
+      "target": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/ingest_script.py::py_dataflow"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/ingest_script.py::py_dataflow",
+      "target": "replace"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_2_data_ingestion/airflow/dags_local/ingest_script.py::py_dataflow",
+      "target": "append"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_2_data_ingestion/airflow/extras/data_ingestion_gcs_dag_ex2.py::airflow::download_dataset_task>>upload_to_gcs_task",
+      "target": "upload_to_gcs_task"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_2_data_ingestion/homework/solution.py::airflow::download_dataset_task>>format_to_parquet_task",
+      "target": "format_to_parquet_task"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_2_data_ingestion/homework/solution.py::airflow::local_to_gcs_task>>rm_task",
+      "target": "rm_task"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "move_files_gcs_task",
+      "target": "cohorts/2022/week_3_data_warehouse/airflow/dags/gcs_to_bq_dag.py::airflow::move_files_gcs_task>>bigquery_external_table_task"
+    },
+    {
+      "edge_type": "PRODUCES",
+      "source": "cohorts/2022/week_3_data_warehouse/airflow/dags/gcs_to_bq_dag.py::airflow::move_files_gcs_task>>bigquery_external_table_task",
+      "target": "bigquery_external_table_task"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "<spark_dynamic:22>",
+      "target": "cohorts/2023/week_6_stream_processing/streaming_confluent.py::py_dataflow"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "./.dlt/secrets.toml",
+      "target": "cohorts/2025/workshops/dynamic_load_dlt.py::py_dataflow"
+    }
+  ]
+}

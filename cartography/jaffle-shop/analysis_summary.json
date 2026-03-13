@@ -1,0 +1,164 @@
+{
+  "repo_path": "D:\\Projects\\jaffle-shop",
+  "output_dir": "D:\\Projects\\Brownfield-Cartographer\\cartography\\jaffle-shop",
+  "agents": {
+    "surveyor": {
+      "elapsed_seconds": 0.43,
+      "files_analyzed": 33,
+      "modules": 33,
+      "datasets": 0,
+      "transformations": 0,
+      "functions": 0,
+      "module_edges": 15,
+      "lineage_edges": 0,
+      "circular_deps": 0
+    },
+    "hydrologist": {
+      "elapsed_seconds": 0.13,
+      "datasets": 21,
+      "transformations": 15,
+      "lineage_edges": 32
+    },
+    "semanticist": {
+      "elapsed_seconds": 84.46,
+      "modules_analyzed": 33,
+      "domain_map": {
+        ".pre-commit-config.yaml": "config",
+        "dbt_project.yml": "config",
+        "macros/cents_to_dollars.sql": "utilities",
+        "macros/generate_schema_name.sql": "utilities",
+        "models/marts/customers.sql": "serving",
+        "models/marts/customers.yml": "serving",
+        "models/marts/locations.sql": "serving",
+        "models/marts/locations.yml": "serving",
+        "models/marts/metricflow_time_spine.sql": "serving",
+        "models/marts/order_items.sql": "serving",
+        "models/marts/order_items.yml": "serving",
+        "models/marts/orders.sql": "serving",
+        "models/marts/orders.yml": "serving",
+        "models/marts/products.sql": "serving",
+        "models/marts/products.yml": "serving",
+        "models/marts/supplies.sql": "serving",
+        "models/marts/supplies.yml": "serving",
+        "models/staging/__sources.yml": "ingestion",
+        "models/staging/stg_customers.sql": "staging",
+        "models/staging/stg_customers.yml": "staging",
+        "models/staging/stg_locations.sql": "staging",
+        "models/staging/stg_locations.yml": "staging",
+        "models/staging/stg_order_items.sql": "staging",
+        "models/staging/stg_order_items.yml": "staging",
+        "models/staging/stg_orders.sql": "staging",
+        "models/staging/stg_orders.yml": "staging",
+        "models/staging/stg_products.sql": "staging",
+        "models/staging/stg_products.yml": "staging",
+        "models/staging/stg_supplies.sql": "staging",
+        "models/staging/stg_supplies.yml": "staging"
+      },
+      "day_one_answers": {
+        "q1": "Raw data enters the pipeline through six source tables defined in models/staging/__sources.yml: raw_customers, raw_orders, raw_items, raw_stores, raw_products, and raw_supplies. These sources flow through staging models (e.g., models/staging/stg_customers.sql) configured as views per dbt_project.yml, then materialize as tables in the marts layer (models/marts/). The macros/generate_schema_name.sql controls schema routing across environments, separating seeds into a dedicated schema and prefixing production schemas.",
+        "q2": "The 5 most critical output datasets are models/marts/customers.sql, models/marts/orders.sql, models/marts/order_items.sql, models/marts/locations.sql, and models/marts/products.sql. customers.sql is confirmed as a top hub by PageRank and serves as the central customer dimension with lifetime value metrics; orders.sql and order_items.sql form the core transactional fact tables powering revenue and profitability analytics. locations.sql is also a top-PageRank hub, and products.sql anchors product-dimension joins across the organization.",
+        "q3": "If models/marts/customers.sql fails (the highest PageRank mart node), all downstream customer segmentation, lifetime value reporting, and analytics dashboards lose their single source of truth for customer data. Its customers.yml defines reusable metrics and semantic definitions consumed by MetricFlow and BI tools, meaning metric queries and dashboards built on the semantic layer would also break. Additionally, since stg_customers.sql feeds customers.sql, a failure cascades back to raw_customers ingestion validation as well.",
+        "q4": "Business logic is heavily concentrated in the marts layer, specifically in models/marts/customers.sql (lifetime metrics, behavioral classification), models/marts/orders.sql (order totals, category counts, boolean flags, sequence numbering), and models/marts/order_items.sql (profitability enrichment). Distributed utility logic lives in macros/cents_to_dollars.sql and macros/generate_schema_name.sql, which are cross-cutting concerns applied pipeline-wide. The staging layer (e.g., models/staging/stg_customers.sql) is intentionally thin, handling only renaming and field selection without substantive business rules.",
+        "q5": "models/marts/customers.yml and models/marts/orders.yml are likely high-velocity pain points because they define both data quality tests and semantic metric definitions, meaning they must change whenever business definitions, KPIs, or segmentation rules evolve. models/marts/order_items.sql and models/marts/orders.sql are also likely frequent change targets as they aggregate financial and categorical metrics that respond to new product types or pricing logic. macros/cents_to_dollars.sql is a high-risk shared dependency since any change to it propagates to all financial calculations across the pipeline."
+      },
+      "budget": {
+        "calls": 35,
+        "total_input_tokens": 14394,
+        "total_output_tokens": 3465,
+        "estimated_cost_usd": 0.032
+      }
+    },
+    "archivist": {
+      "elapsed_seconds": 0.01,
+      "artifacts": [
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\jaffle-shop\\CODEBASE.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\jaffle-shop\\onboarding_brief.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\jaffle-shop\\cartography_trace.jsonl"
+      ]
+    }
+  },
+  "incremental": false,
+  "changed_files": [],
+  "elapsed_seconds": 86.4,
+  "kg_stats": {
+    "modules": 33,
+    "datasets": 21,
+    "transformations": 15,
+    "functions": 0,
+    "module_edges": 15,
+    "lineage_edges": 32,
+    "circular_deps": 0
+  },
+  "top_hubs": [
+    {
+      "path": "macros/cents_to_dollars.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    },
+    {
+      "path": "macros/generate_schema_name.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    },
+    {
+      "path": "models/marts/customers.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    },
+    {
+      "path": "models/marts/locations.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    },
+    {
+      "path": "models/marts/metricflow_time_spine.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    }
+  ],
+  "dead_code_candidates": [
+    ".pre-commit-config.yaml",
+    "dbt_project.yml",
+    "macros/cents_to_dollars.sql",
+    "macros/generate_schema_name.sql",
+    "models/marts/customers.sql",
+    "models/marts/customers.yml",
+    "models/marts/locations.sql",
+    "models/marts/locations.yml",
+    "models/marts/metricflow_time_spine.sql",
+    "models/marts/order_items.sql",
+    "models/marts/order_items.yml",
+    "models/marts/orders.sql",
+    "models/marts/orders.yml",
+    "models/marts/products.sql",
+    "models/marts/products.yml",
+    "models/marts/supplies.sql",
+    "models/marts/supplies.yml",
+    "models/staging/__sources.yml",
+    "models/staging/stg_customers.sql",
+    "models/staging/stg_customers.yml"
+  ],
+  "circular_deps": [],
+  "data_sources": [
+    "raw_customers",
+    "raw_orders",
+    "raw_items",
+    "raw_stores",
+    "raw_products",
+    "raw_supplies"
+  ],
+  "data_sinks": [
+    "cents_to_dollars",
+    "generate_schema_name",
+    "customers",
+    "locations",
+    "metricflow_time_spine",
+    "products",
+    "supplies"
+  ]
+}

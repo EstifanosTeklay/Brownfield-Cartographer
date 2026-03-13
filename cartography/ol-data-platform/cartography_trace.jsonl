@@ -1,0 +1,4 @@
+{"timestamp": "2026-03-13T15:31:35.362125", "action": "critical_path_extracted", "evidence_source": "module_graph.pagerank", "result": "Top module: src/ol_dbt/macros/apply_deduplication_query.sql", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T15:31:35.364557", "action": "lineage_sources_sinks_extracted", "evidence_source": "lineage_graph", "result": "371 sources, 269 sinks", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T15:31:35.373315", "action": "codebase_md_generated", "evidence_source": "all_agents", "result": "116968 chars written", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T15:31:35.382656", "action": "onboarding_brief_generated", "evidence_source": "all_agents", "result": "1366 chars written", "confidence": "high", "method": "static_analysis"}

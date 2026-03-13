@@ -1,0 +1,134 @@
+{
+  "repo_path": "C:\\Users\\MOON\\AppData\\Local\\Temp\\brownfield_cartographer_repos\\DataTalksClub__data-engineering-zoomcamp",
+  "output_dir": "D:\\Projects\\Brownfield-Cartographer\\cartography\\DataTalksClub__data-engineering-zoomcamp",
+  "agents": {
+    "surveyor": {
+      "elapsed_seconds": 1.18,
+      "files_analyzed": 146,
+      "modules": 146,
+      "datasets": 0,
+      "transformations": 0,
+      "functions": 0,
+      "module_edges": 24,
+      "lineage_edges": 0,
+      "circular_deps": 0
+    },
+    "hydrologist": {
+      "elapsed_seconds": 0.79,
+      "datasets": 41,
+      "transformations": 30,
+      "lineage_edges": 57
+    },
+    "archivist": {
+      "elapsed_seconds": 0.02,
+      "artifacts": [
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\DataTalksClub__data-engineering-zoomcamp\\CODEBASE.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\DataTalksClub__data-engineering-zoomcamp\\onboarding_brief.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\DataTalksClub__data-engineering-zoomcamp\\cartography_trace.jsonl"
+      ]
+    }
+  },
+  "elapsed_seconds": 2.0,
+  "kg_stats": {
+    "modules": 146,
+    "datasets": 41,
+    "transformations": 30,
+    "functions": 0,
+    "module_edges": 24,
+    "lineage_edges": 57,
+    "circular_deps": 0
+  },
+  "top_hubs": [
+    {
+      "path": "04-analytics-engineering/taxi_rides_ny/models/marts/reporting/fct_monthly_zone_revenue.sql",
+      "pagerank": 0.012646,
+      "in_degree": 2,
+      "language": "sql"
+    },
+    {
+      "path": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_green_tripdata.sql",
+      "pagerank": 0.012646,
+      "in_degree": 3,
+      "language": "sql"
+    },
+    {
+      "path": "04-analytics-engineering/taxi_rides_ny/models/staging/stg_yellow_tripdata.sql",
+      "pagerank": 0.012646,
+      "in_degree": 3,
+      "language": "sql"
+    },
+    {
+      "path": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips.sql",
+      "pagerank": 0.009833,
+      "in_degree": 2,
+      "language": "sql"
+    },
+    {
+      "path": "04-analytics-engineering/taxi_rides_ny/models/intermediate/int_trips_unioned.sql",
+      "pagerank": 0.009833,
+      "in_degree": 2,
+      "language": "sql"
+    }
+  ],
+  "dead_code_candidates": [
+    "01-docker-terraform/docker-sql/pipeline/docker-compose.yaml",
+    "01-docker-terraform/docker-sql/pipeline/ingest_data.py",
+    "02-workflow-orchestration/docker-compose.yml",
+    "02-workflow-orchestration/flows/01_hello_world.yaml",
+    "02-workflow-orchestration/flows/02_python.yaml",
+    "02-workflow-orchestration/flows/03_getting_started_data_pipeline.yaml",
+    "02-workflow-orchestration/flows/04_postgres_taxi.yaml",
+    "02-workflow-orchestration/flows/05_postgres_taxi_scheduled.yaml",
+    "02-workflow-orchestration/flows/06_gcp_kv.yaml",
+    "02-workflow-orchestration/flows/07_gcp_setup.yaml",
+    "02-workflow-orchestration/flows/08_gcp_taxi.yaml",
+    "02-workflow-orchestration/flows/09_gcp_taxi_scheduled.yaml",
+    "02-workflow-orchestration/flows/10_chat_without_rag.yaml",
+    "02-workflow-orchestration/flows/11_chat_with_rag.yaml",
+    "03-data-warehouse/big_query.sql",
+    "03-data-warehouse/big_query_hw.sql",
+    "03-data-warehouse/big_query_ml.sql",
+    "03-data-warehouse/extras/web_to_gcs.py",
+    "03-data-warehouse/extras/web_to_gcs_with_progress_bar.py",
+    "04-analytics-engineering/taxi_rides_ny/dbt_project.yml"
+  ],
+  "circular_deps": [],
+  "data_sources": [
+    "`",
+    "taxi",
+    "payment_type_lookup",
+    "taxi_zone_lookup",
+    "green_tripdata",
+    "yellow_tripdata",
+    "<spark_dynamic:34>",
+    "<spark_dynamic:28>",
+    "<spark_dynamic:30>",
+    "<spark_dynamic:36>",
+    "<spark_dynamic:16>",
+    "<dynamic:16>",
+    "download_dataset_task",
+    "local_to_gcs_task",
+    "wget_task",
+    "<dynamic:18>",
+    "move_files_gcs_task",
+    "<spark_dynamic:22>",
+    "./.dlt/secrets.toml"
+  ],
+  "data_sinks": [
+    "pyarrow",
+    "get_trip_duration_minutes",
+    "get_vendor_data",
+    "safe_cast",
+    "dim_vendors",
+    "fct_monthly_zone_revenue",
+    "overwrite",
+    "<spark_write_dynamic:110>",
+    "format_to_parquet_task",
+    "bigquery_external_table_task",
+    "ingest_task",
+    "replace",
+    "append",
+    "upload_to_gcs_task",
+    "rm_task"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "repo_path": "C:\\Users\\MOON\\AppData\\Local\\Temp\\brownfield_cartographer_repos\\dbt-labs__jaffle-shop",
+  "output_dir": "D:\\Projects\\Brownfield-Cartographer\\cartography\\dbt-labs__jaffle-shop",
+  "agents": {
+    "surveyor": {
+      "elapsed_seconds": 0.49,
+      "files_analyzed": 33,
+      "modules": 33,
+      "datasets": 0,
+      "transformations": 0,
+      "functions": 0,
+      "module_edges": 15,
+      "lineage_edges": 0,
+      "circular_deps": 0
+    },
+    "hydrologist": {
+      "elapsed_seconds": 0.18,
+      "datasets": 21,
+      "transformations": 15,
+      "lineage_edges": 32
+    },
+    "semanticist": {
+      "status": "skipped",
+      "reason": "disabled"
+    },
+    "archivist": {
+      "elapsed_seconds": 0.01,
+      "artifacts": [
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\dbt-labs__jaffle-shop\\CODEBASE.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\dbt-labs__jaffle-shop\\onboarding_brief.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\dbt-labs__jaffle-shop\\cartography_trace.jsonl"
+      ]
+    }
+  },
+  "incremental": false,
+  "changed_files": [],
+  "elapsed_seconds": 1.26,
+  "kg_stats": {
+    "modules": 33,
+    "datasets": 21,
+    "transformations": 15,
+    "functions": 0,
+    "module_edges": 15,
+    "lineage_edges": 32,
+    "circular_deps": 0
+  },
+  "top_hubs": [
+    {
+      "path": "macros/cents_to_dollars.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    },
+    {
+      "path": "macros/generate_schema_name.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    },
+    {
+      "path": "models/marts/customers.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    },
+    {
+      "path": "models/marts/locations.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    },
+    {
+      "path": "models/marts/metricflow_time_spine.sql",
+      "pagerank": 0.031216,
+      "in_degree": 1,
+      "language": "sql"
+    }
+  ],
+  "dead_code_candidates": [
+    ".pre-commit-config.yaml",
+    "dbt_project.yml",
+    "macros/cents_to_dollars.sql",
+    "macros/generate_schema_name.sql",
+    "models/marts/customers.sql",
+    "models/marts/customers.yml",
+    "models/marts/locations.sql",
+    "models/marts/locations.yml",
+    "models/marts/metricflow_time_spine.sql",
+    "models/marts/order_items.sql",
+    "models/marts/order_items.yml",
+    "models/marts/orders.sql",
+    "models/marts/orders.yml",
+    "models/marts/products.sql",
+    "models/marts/products.yml",
+    "models/marts/supplies.sql",
+    "models/marts/supplies.yml",
+    "models/staging/__sources.yml",
+    "models/staging/stg_customers.sql",
+    "models/staging/stg_customers.yml"
+  ],
+  "circular_deps": [],
+  "data_sources": [
+    "raw_customers",
+    "raw_orders",
+    "raw_items",
+    "raw_stores",
+    "raw_products",
+    "raw_supplies"
+  ],
+  "data_sinks": [
+    "cents_to_dollars",
+    "generate_schema_name",
+    "customers",
+    "locations",
+    "metricflow_time_spine",
+    "products",
+    "supplies"
+  ]
+}

@@ -1,0 +1,4 @@
+{"timestamp": "2026-03-13T20:52:56.330558", "action": "critical_path_extracted", "evidence_source": "module_graph.pagerank", "result": "Top module: macros/cents_to_dollars.sql", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T20:52:56.330634", "action": "lineage_sources_sinks_extracted", "evidence_source": "lineage_graph", "result": "6 sources, 7 sinks", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T20:52:56.331969", "action": "codebase_md_generated", "evidence_source": "all_agents", "result": "3713 chars written", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T20:52:56.333955", "action": "onboarding_brief_generated", "evidence_source": "all_agents", "result": "996 chars written", "confidence": "high", "method": "static_analysis"}
