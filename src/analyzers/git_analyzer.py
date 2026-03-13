@@ -107,3 +107,49 @@ def get_git_log_summary(repo_path: Path, days: int = 90) -> Dict[str, any]:
         "last_commit": last[:10] if last else None,
         "is_git_repo": is_git_repo(repo_path),
     }
+def get_changed_files_since_last_run(
+    repo_path: Path,
+    last_run_timestamp: str,
+) -> List[str]:
+    """
+    Return list of files changed since last_run_timestamp.
+    last_run_timestamp: ISO date string e.g. '2024-01-15'
+    """
+    output = _run_git(
+        ["log", f"--since={last_run_timestamp}", "--name-only", "--pretty=format:", "--no-merges"],
+        repo_path,
+    )
+    if not output:
+        return []
+
+    changed = set()
+    for line in output.splitlines():
+        line = line.strip()
+        if line:
+            changed.add(line)
+
+    return sorted(changed)
+
+
+def get_last_run_timestamp(output_dir: Path) -> Optional[str]:
+    """
+    Read the timestamp of the last analysis run from analysis_summary.json.
+    Returns None if no previous run exists.
+    """
+    summary_path = output_dir / "analysis_summary.json"
+    if not summary_path.exists():
+        return None
+
+    try:
+        import json
+        data = json.loads(summary_path.read_text())
+        # Get the timestamp from the trace log if available
+        trace_path = output_dir / "cartography_trace.jsonl"
+        if trace_path.exists():
+            first_line = trace_path.read_text().splitlines()[0]
+            entry = json.loads(first_line)
+            return entry.get("timestamp", "")[:10]  # YYYY-MM-DD
+    except Exception:
+        pass
+
+    return None
