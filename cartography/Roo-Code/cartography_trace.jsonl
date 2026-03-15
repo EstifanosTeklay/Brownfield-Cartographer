@@ -1,0 +1,4 @@
+{"timestamp": "2026-03-14T17:01:27.882174", "action": "critical_path_extracted", "evidence_source": "module_graph.pagerank", "result": "Top module: apps/cli/scripts/test-stdin-stream.ts", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-14T17:01:27.882352", "action": "lineage_sources_sinks_extracted", "evidence_source": "lineage_graph", "result": "9 sources, 0 sinks", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-14T17:01:27.900375", "action": "codebase_md_generated", "evidence_source": "all_agents", "result": "98606 chars written", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-14T17:01:27.917085", "action": "onboarding_brief_generated", "evidence_source": "all_agents", "result": "986 chars written", "confidence": "high", "method": "static_analysis"}

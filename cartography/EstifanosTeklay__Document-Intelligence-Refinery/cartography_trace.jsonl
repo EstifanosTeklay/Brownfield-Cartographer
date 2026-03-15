@@ -1,0 +1,4 @@
+{"timestamp": "2026-03-13T22:35:07.812677", "action": "critical_path_extracted", "evidence_source": "module_graph.pagerank", "result": "Top module: app.py", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T22:35:07.812763", "action": "lineage_sources_sinks_extracted", "evidence_source": "lineage_graph", "result": "3 sources, 2 sinks", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T22:35:07.814676", "action": "codebase_md_generated", "evidence_source": "all_agents", "result": "3836 chars written", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T22:35:07.819013", "action": "onboarding_brief_generated", "evidence_source": "all_agents", "result": "820 chars written", "confidence": "high", "method": "static_analysis"}

@@ -1,0 +1,52 @@
+{
+  "repo_path": "D:\\Projects\\mage-ai\\mage-ai",
+  "output_dir": "D:\\Projects\\Brownfield-Cartographer\\cartography\\mage-ai",
+  "agents": {
+    "surveyor": {
+      "elapsed_seconds": 0.01,
+      "files_analyzed": 0,
+      "modules": 0,
+      "datasets": 0,
+      "transformations": 0,
+      "functions": 0,
+      "module_edges": 0,
+      "lineage_edges": 0,
+      "circular_deps": 0
+    },
+    "hydrologist": {
+      "elapsed_seconds": 0.0,
+      "datasets": 0,
+      "transformations": 0,
+      "lineage_edges": 0
+    },
+    "semanticist": {
+      "status": "skipped",
+      "reason": "disabled"
+    },
+    "archivist": {
+      "elapsed_seconds": 0.0,
+      "artifacts": [
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\mage-ai\\CODEBASE.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\mage-ai\\onboarding_brief.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\mage-ai\\cartography_trace.jsonl"
+      ]
+    }
+  },
+  "incremental": false,
+  "changed_files": [],
+  "elapsed_seconds": 0.01,
+  "kg_stats": {
+    "modules": 0,
+    "datasets": 0,
+    "transformations": 0,
+    "functions": 0,
+    "module_edges": 0,
+    "lineage_edges": 0,
+    "circular_deps": 0
+  },
+  "top_hubs": [],
+  "dead_code_candidates": [],
+  "circular_deps": [],
+  "data_sources": [],
+  "data_sinks": []
+}

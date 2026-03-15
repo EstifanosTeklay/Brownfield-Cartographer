@@ -1,0 +1,4 @@
+{"timestamp": "2026-03-13T23:17:15.809099", "action": "critical_path_extracted", "evidence_source": "module_graph.pagerank", "result": "Top module: none", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T23:17:15.809129", "action": "lineage_sources_sinks_extracted", "evidence_source": "lineage_graph", "result": "0 sources, 0 sinks", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T23:17:15.809852", "action": "codebase_md_generated", "evidence_source": "all_agents", "result": "907 chars written", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T23:17:15.810548", "action": "onboarding_brief_generated", "evidence_source": "all_agents", "result": "540 chars written", "confidence": "high", "method": "static_analysis"}

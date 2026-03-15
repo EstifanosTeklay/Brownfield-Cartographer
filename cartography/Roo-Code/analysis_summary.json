@@ -1,0 +1,114 @@
+{
+  "repo_path": "D:\\Projects\\Roo-Code",
+  "output_dir": "D:\\Projects\\Brownfield-Cartographer\\cartography\\Roo-Code",
+  "agents": {
+    "surveyor": {
+      "elapsed_seconds": 26.89,
+      "files_analyzed": 1323,
+      "modules": 1323,
+      "datasets": 0,
+      "transformations": 0,
+      "functions": 0,
+      "module_edges": 0,
+      "lineage_edges": 0,
+      "circular_deps": 0
+    },
+    "hydrologist": {
+      "elapsed_seconds": 239.84,
+      "datasets": 9,
+      "transformations": 8,
+      "lineage_edges": 19
+    },
+    "semanticist": {
+      "status": "skipped",
+      "reason": "disabled"
+    },
+    "archivist": {
+      "elapsed_seconds": 0.05,
+      "artifacts": [
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\Roo-Code\\CODEBASE.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\Roo-Code\\onboarding_brief.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\Roo-Code\\cartography_trace.jsonl"
+      ]
+    }
+  },
+  "incremental": false,
+  "changed_files": [],
+  "elapsed_seconds": 267.11,
+  "kg_stats": {
+    "modules": 1323,
+    "datasets": 9,
+    "transformations": 8,
+    "functions": 0,
+    "module_edges": 0,
+    "lineage_edges": 19,
+    "circular_deps": 0
+  },
+  "top_hubs": [
+    {
+      "path": "apps/cli/scripts/test-stdin-stream.ts",
+      "pagerank": 0.000756,
+      "in_degree": 0,
+      "language": "typescript"
+    },
+    {
+      "path": "apps/cli/src/__tests__/index.test.ts",
+      "pagerank": 0.000756,
+      "in_degree": 0,
+      "language": "typescript"
+    },
+    {
+      "path": "apps/cli/src/agent/__tests__/extension-client.test.ts",
+      "pagerank": 0.000756,
+      "in_degree": 0,
+      "language": "typescript"
+    },
+    {
+      "path": "apps/cli/src/agent/__tests__/extension-host.test.ts",
+      "pagerank": 0.000756,
+      "in_degree": 0,
+      "language": "typescript"
+    },
+    {
+      "path": "apps/cli/src/agent/agent-state.ts",
+      "pagerank": 0.000756,
+      "in_degree": 0,
+      "language": "typescript"
+    }
+  ],
+  "dead_code_candidates": [
+    "apps/cli/src/agent/index.ts",
+    "apps/cli/src/commands/auth/index.ts",
+    "apps/cli/src/commands/auth/logout.ts",
+    "apps/cli/src/commands/auth/status.ts",
+    "apps/cli/src/commands/cli/__tests__/run.test.ts",
+    "apps/cli/src/commands/cli/index.ts",
+    "apps/cli/src/commands/index.ts",
+    "apps/cli/src/lib/auth/index.ts",
+    "apps/cli/src/lib/auth/token.ts",
+    "apps/cli/src/lib/sdk/client.ts",
+    "apps/cli/src/lib/sdk/index.ts",
+    "apps/cli/src/lib/sdk/types.ts",
+    "apps/cli/src/lib/storage/config-dir.ts",
+    "apps/cli/src/lib/storage/credentials.ts",
+    "apps/cli/src/lib/storage/ephemeral.ts",
+    "apps/cli/src/lib/storage/history.ts",
+    "apps/cli/src/lib/storage/index.ts",
+    "apps/cli/src/lib/storage/settings.ts",
+    "apps/cli/src/lib/utils/__tests__/commands.test.ts",
+    "apps/cli/src/lib/utils/__tests__/path.test.ts"
+  ],
+  "circular_deps": [],
+  "data_sources": [
+    "runs",
+    "taskmetrics",
+    "tasks",
+    "toolerrors",
+    "tasks_language_exercise_idx",
+    "tasks_run_id_runs_id_fk",
+    "tasks_task_metrics_id_taskmetrics_id_fk",
+    "toolerrors_run_id_runs_id_fk",
+    "toolerrors_task_id_tasks_id_fk"
+  ],
+  "data_sinks": []
+}

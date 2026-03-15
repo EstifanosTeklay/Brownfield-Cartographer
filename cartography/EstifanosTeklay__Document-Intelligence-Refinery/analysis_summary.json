@@ -1,0 +1,111 @@
+{
+  "repo_path": "C:\\Users\\MOON\\AppData\\Local\\Temp\\brownfield_cartographer_repos\\EstifanosTeklay__Document-Intelligence-Refinery",
+  "output_dir": "D:\\Projects\\Brownfield-Cartographer\\cartography\\EstifanosTeklay__Document-Intelligence-Refinery",
+  "agents": {
+    "surveyor": {
+      "elapsed_seconds": 0.66,
+      "files_analyzed": 32,
+      "modules": 32,
+      "datasets": 0,
+      "transformations": 0,
+      "functions": 0,
+      "module_edges": 0,
+      "lineage_edges": 0,
+      "circular_deps": 0
+    },
+    "hydrologist": {
+      "elapsed_seconds": 0.16,
+      "datasets": 3,
+      "transformations": 3,
+      "lineage_edges": 3
+    },
+    "semanticist": {
+      "status": "skipped",
+      "reason": "disabled"
+    },
+    "archivist": {
+      "elapsed_seconds": 0.01,
+      "artifacts": [
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\EstifanosTeklay__Document-Intelligence-Refinery\\CODEBASE.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\EstifanosTeklay__Document-Intelligence-Refinery\\onboarding_brief.md",
+        "D:\\Projects\\Brownfield-Cartographer\\cartography\\EstifanosTeklay__Document-Intelligence-Refinery\\cartography_trace.jsonl"
+      ]
+    }
+  },
+  "incremental": false,
+  "changed_files": [],
+  "elapsed_seconds": 0.86,
+  "kg_stats": {
+    "modules": 32,
+    "datasets": 3,
+    "transformations": 3,
+    "functions": 0,
+    "module_edges": 0,
+    "lineage_edges": 3,
+    "circular_deps": 0
+  },
+  "top_hubs": [
+    {
+      "path": "app.py",
+      "pagerank": 0.03125,
+      "in_degree": 0,
+      "language": "python"
+    },
+    {
+      "path": "extraction_rules.yaml",
+      "pagerank": 0.03125,
+      "in_degree": 0,
+      "language": "yaml"
+    },
+    {
+      "path": "rubric/extraction_rules.yaml",
+      "pagerank": 0.03125,
+      "in_degree": 0,
+      "language": "yaml"
+    },
+    {
+      "path": "run_phase0.py",
+      "pagerank": 0.03125,
+      "in_degree": 0,
+      "language": "python"
+    },
+    {
+      "path": "src/__init__.py",
+      "pagerank": 0.03125,
+      "in_degree": 0,
+      "language": "python"
+    }
+  ],
+  "dead_code_candidates": [
+    "extraction_rules.yaml",
+    "rubric/extraction_rules.yaml",
+    "run_phase0.py",
+    "src/__init__.py",
+    "src/agents/__init__.py",
+    "src/agents/audit_mode.py",
+    "src/agents/chunk_validator.py",
+    "src/agents/chunker.py",
+    "src/agents/extractor.py",
+    "src/agents/indexer.py",
+    "src/agents/query_agent.py",
+    "src/agents/triage.py",
+    "src/models/__init__.py",
+    "src/models/document_profile.py",
+    "src/models/extracted_document.py",
+    "src/models/ldu.py",
+    "src/models/pageindex.py",
+    "src/models/provenance.py",
+    "src/models/routing.py",
+    "src/storage/fact_table.py"
+  ],
+  "circular_deps": [],
+  "data_sources": [
+    "<spark_dynamic:145>",
+    "<spark_dynamic:468>",
+    "png"
+  ],
+  "data_sinks": [
+    "png",
+    "PNG"
+  ]
+}

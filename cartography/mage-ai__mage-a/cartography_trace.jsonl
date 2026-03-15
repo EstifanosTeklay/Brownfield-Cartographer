@@ -1,0 +1,4 @@
+{"timestamp": "2026-03-13T23:23:14.054375", "action": "critical_path_extracted", "evidence_source": "module_graph.pagerank", "result": "Top module: mage_ai/tests/shared/mocks/dbt/test_project/models/example/my_first_dbt_model.sql", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T23:23:14.054789", "action": "lineage_sources_sinks_extracted", "evidence_source": "lineage_graph", "result": "242 sources, 83 sinks", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T23:23:14.066067", "action": "codebase_md_generated", "evidence_source": "all_agents", "result": "309201 chars written", "confidence": "high", "method": "static_analysis"}
+{"timestamp": "2026-03-13T23:23:14.079696", "action": "onboarding_brief_generated", "evidence_source": "all_agents", "result": "1295 chars written", "confidence": "high", "method": "static_analysis"}

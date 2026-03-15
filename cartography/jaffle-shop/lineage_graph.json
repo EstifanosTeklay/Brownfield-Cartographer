@@ -487,6 +487,146 @@
       ],
       "sql_query": "",
       "node_type": "transformation"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/marts/customers.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/marts/customers.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/marts/locations.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/marts/locations.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/marts/orders.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/marts/orders.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/marts/order_items.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/marts/order_items.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/marts/products.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/marts/products.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/marts/supplies.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/marts/supplies.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/staging/stg_customers.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/staging/stg_customers.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/staging/stg_locations.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/staging/stg_locations.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/staging/stg_orders.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/staging/stg_orders.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/staging/stg_order_items.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/staging/stg_order_items.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/staging/stg_products.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/staging/stg_products.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/staging/stg_supplies.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/staging/stg_supplies.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "models/staging/__sources.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "models/staging/__sources.yml"
+    },
+    {
+      "node_type": "transformation",
+      "source_file": "dbt_project.yml",
+      "transformation_type": "config",
+      "line_range": [
+        0,
+        0
+      ],
+      "id": "dbt_project.yml"
     }
   ],
   "edges": [
@@ -516,6 +656,11 @@
       "target": "customers"
     },
     {
+      "edge_type": "documented_by",
+      "source": "models/marts/customers.sql::sql::0",
+      "target": "models/marts/customers.yml"
+    },
+    {
       "edge_type": "CONSUMES",
       "source": "stg_locations",
       "target": "models/marts/locations.sql::sql::0"
@@ -524,6 +669,11 @@
       "edge_type": "PRODUCES",
       "source": "models/marts/locations.sql::sql::0",
       "target": "locations"
+    },
+    {
+      "edge_type": "documented_by",
+      "source": "models/marts/locations.sql::sql::0",
+      "target": "models/marts/locations.yml"
     },
     {
       "edge_type": "PRODUCES",
@@ -576,9 +726,19 @@
       "target": "order_items"
     },
     {
+      "edge_type": "documented_by",
+      "source": "models/marts/order_items.sql::sql::0",
+      "target": "models/marts/order_items.yml"
+    },
+    {
       "edge_type": "PRODUCES",
       "source": "models/marts/orders.sql::sql::0",
       "target": "orders"
+    },
+    {
+      "edge_type": "documented_by",
+      "source": "models/marts/orders.sql::sql::0",
+      "target": "models/marts/orders.yml"
     },
     {
       "edge_type": "PRODUCES",
@@ -586,9 +746,19 @@
       "target": "products"
     },
     {
+      "edge_type": "documented_by",
+      "source": "models/marts/products.sql::sql::0",
+      "target": "models/marts/products.yml"
+    },
+    {
       "edge_type": "PRODUCES",
       "source": "models/marts/supplies.sql::sql::0",
       "target": "supplies"
+    },
+    {
+      "edge_type": "documented_by",
+      "source": "models/marts/supplies.sql::sql::0",
+      "target": "models/marts/supplies.yml"
     },
     {
       "edge_type": "CONSUMES",
@@ -626,9 +796,19 @@
       "target": "stg_customers"
     },
     {
+      "edge_type": "documented_by",
+      "source": "models/staging/stg_customers.sql::sql::0",
+      "target": "models/staging/stg_customers.yml"
+    },
+    {
       "edge_type": "PRODUCES",
       "source": "models/staging/stg_locations.sql::sql::0",
       "target": "stg_locations"
+    },
+    {
+      "edge_type": "documented_by",
+      "source": "models/staging/stg_locations.sql::sql::0",
+      "target": "models/staging/stg_locations.yml"
     },
     {
       "edge_type": "PRODUCES",
@@ -636,9 +816,19 @@
       "target": "stg_order_items"
     },
     {
+      "edge_type": "documented_by",
+      "source": "models/staging/stg_order_items.sql::sql::0",
+      "target": "models/staging/stg_order_items.yml"
+    },
+    {
       "edge_type": "PRODUCES",
       "source": "models/staging/stg_orders.sql::sql::0",
       "target": "stg_orders"
+    },
+    {
+      "edge_type": "documented_by",
+      "source": "models/staging/stg_orders.sql::sql::0",
+      "target": "models/staging/stg_orders.yml"
     },
     {
       "edge_type": "PRODUCES",
@@ -646,9 +836,114 @@
       "target": "stg_products"
     },
     {
+      "edge_type": "documented_by",
+      "source": "models/staging/stg_products.sql::sql::0",
+      "target": "models/staging/stg_products.yml"
+    },
+    {
       "edge_type": "PRODUCES",
       "source": "models/staging/stg_supplies.sql::sql::0",
       "target": "stg_supplies"
+    },
+    {
+      "edge_type": "documented_by",
+      "source": "models/staging/stg_supplies.sql::sql::0",
+      "target": "models/staging/stg_supplies.yml"
+    },
+    {
+      "edge_type": "source_for",
+      "source": "models/staging/__sources.yml",
+      "target": "models/staging/stg_customers.sql::sql::0"
+    },
+    {
+      "edge_type": "source_for",
+      "source": "models/staging/__sources.yml",
+      "target": "models/staging/stg_locations.sql::sql::0"
+    },
+    {
+      "edge_type": "source_for",
+      "source": "models/staging/__sources.yml",
+      "target": "models/staging/stg_orders.sql::sql::0"
+    },
+    {
+      "edge_type": "source_for",
+      "source": "models/staging/__sources.yml",
+      "target": "models/staging/stg_order_items.sql::sql::0"
+    },
+    {
+      "edge_type": "source_for",
+      "source": "models/staging/__sources.yml",
+      "target": "models/staging/stg_products.sql::sql::0"
+    },
+    {
+      "edge_type": "source_for",
+      "source": "models/staging/__sources.yml",
+      "target": "models/staging/stg_supplies.sql::sql::0"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/marts/customers.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/marts/locations.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/marts/orders.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/marts/order_items.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/marts/products.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/marts/supplies.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/staging/stg_customers.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/staging/stg_locations.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/staging/stg_orders.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/staging/stg_order_items.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/staging/stg_products.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/staging/stg_supplies.yml"
+    },
+    {
+      "edge_type": "governs",
+      "source": "dbt_project.yml",
+      "target": "models/staging/__sources.yml"
     }
   ]
 }

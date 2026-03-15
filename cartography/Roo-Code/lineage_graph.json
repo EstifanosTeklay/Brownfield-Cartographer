@@ -1,0 +1,334 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "name": "runs",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "runs"
+    },
+    {
+      "name": "taskmetrics",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "taskmetrics"
+    },
+    {
+      "name": "tasks",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "tasks"
+    },
+    {
+      "name": "toolerrors",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "toolerrors"
+    },
+    {
+      "id": "packages/evals/src/db/migrations/0000_young_trauma.sql::sql::0",
+      "source_datasets": [
+        "runs",
+        "taskmetrics",
+        "tasks",
+        "toolerrors"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "packages/evals/src/db/migrations/0000_young_trauma.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "packages/evals/src/db/migrations/0001_add_timeout_to_runs.sql::sql::0",
+      "source_datasets": [
+        "runs"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "packages/evals/src/db/migrations/0001_add_timeout_to_runs.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "packages/evals/src/db/migrations/0001_lowly_captain_flint.sql::sql::0",
+      "source_datasets": [
+        "runs"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "packages/evals/src/db/migrations/0001_lowly_captain_flint.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "packages/evals/src/db/migrations/0002_bouncy_blazing_skull.sql::sql::0",
+      "source_datasets": [
+        "runs"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "packages/evals/src/db/migrations/0002_bouncy_blazing_skull.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "packages/evals/src/db/migrations/0003_simple_retro_girl.sql::sql::0",
+      "source_datasets": [
+        "runs"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "packages/evals/src/db/migrations/0003_simple_retro_girl.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "tasks_language_exercise_idx",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "tasks_language_exercise_idx"
+    },
+    {
+      "id": "packages/evals/src/db/migrations/0004_sloppy_black_knight.sql::sql::0",
+      "source_datasets": [
+        "tasks",
+        "tasks_language_exercise_idx"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "packages/evals/src/db/migrations/0004_sloppy_black_knight.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "name": "tasks_run_id_runs_id_fk",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "tasks_run_id_runs_id_fk"
+    },
+    {
+      "name": "tasks_task_metrics_id_taskmetrics_id_fk",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "tasks_task_metrics_id_taskmetrics_id_fk"
+    },
+    {
+      "name": "toolerrors_run_id_runs_id_fk",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "toolerrors_run_id_runs_id_fk"
+    },
+    {
+      "name": "toolerrors_task_id_tasks_id_fk",
+      "storage_type": "table",
+      "schema_snapshot": null,
+      "freshness_sla": null,
+      "owner": null,
+      "is_source_of_truth": false,
+      "path_or_table": null,
+      "node_type": "dataset",
+      "id": "toolerrors_task_id_tasks_id_fk"
+    },
+    {
+      "id": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0",
+      "source_datasets": [
+        "runs",
+        "taskmetrics",
+        "tasks",
+        "tasks_run_id_runs_id_fk",
+        "tasks_task_metrics_id_taskmetrics_id_fk",
+        "toolerrors",
+        "toolerrors_run_id_runs_id_fk",
+        "toolerrors_task_id_tasks_id_fk"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "packages/evals/src/db/migrations/0005_strong_skrulls.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    },
+    {
+      "id": "packages/evals/src/db/migrations/0006_worried_spectrum.sql::sql::0",
+      "source_datasets": [
+        "runs"
+      ],
+      "target_datasets": [],
+      "transformation_type": "sql_select",
+      "source_file": "packages/evals/src/db/migrations/0006_worried_spectrum.sql",
+      "line_range": [
+        0,
+        0
+      ],
+      "sql_query": "",
+      "node_type": "transformation"
+    }
+  ],
+  "edges": [
+    {
+      "edge_type": "CONSUMES",
+      "source": "runs",
+      "target": "packages/evals/src/db/migrations/0000_young_trauma.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "runs",
+      "target": "packages/evals/src/db/migrations/0001_add_timeout_to_runs.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "runs",
+      "target": "packages/evals/src/db/migrations/0001_lowly_captain_flint.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "runs",
+      "target": "packages/evals/src/db/migrations/0002_bouncy_blazing_skull.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "runs",
+      "target": "packages/evals/src/db/migrations/0003_simple_retro_girl.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "runs",
+      "target": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "runs",
+      "target": "packages/evals/src/db/migrations/0006_worried_spectrum.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "taskmetrics",
+      "target": "packages/evals/src/db/migrations/0000_young_trauma.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "taskmetrics",
+      "target": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "tasks",
+      "target": "packages/evals/src/db/migrations/0000_young_trauma.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "tasks",
+      "target": "packages/evals/src/db/migrations/0004_sloppy_black_knight.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "tasks",
+      "target": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "toolerrors",
+      "target": "packages/evals/src/db/migrations/0000_young_trauma.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "toolerrors",
+      "target": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "tasks_language_exercise_idx",
+      "target": "packages/evals/src/db/migrations/0004_sloppy_black_knight.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "tasks_run_id_runs_id_fk",
+      "target": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "tasks_task_metrics_id_taskmetrics_id_fk",
+      "target": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "toolerrors_run_id_runs_id_fk",
+      "target": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0"
+    },
+    {
+      "edge_type": "CONSUMES",
+      "source": "toolerrors_task_id_tasks_id_fk",
+      "target": "packages/evals/src/db/migrations/0005_strong_skrulls.sql::sql::0"
+    }
+  ]
+}
