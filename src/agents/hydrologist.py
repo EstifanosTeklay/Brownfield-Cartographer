@@ -184,6 +184,8 @@ class Hydrologist:
                 n = self._analyze_yaml_file(fpath, rel_path)
                 txn_count += n
 
+        self._link_yaml_to_sql()
+
         elapsed = time.time() - start
         self._log(
             f"Done in {elapsed:.1f}s — "
@@ -314,6 +316,158 @@ class Hydrologist:
                     count += 1
 
         return count
+
+    def _normalize_rel(self, path: Path | str) -> str:
+        return str(path).replace("\\", "/")
+
+    def _ensure_lineage_file_node(self, rel_path: str, node_kind: str) -> None:
+        """Ensure config/file node exists in lineage graph for visualization links."""
+        rel_path = self._normalize_rel(rel_path)
+        if rel_path in self.kg.lineage_graph:
+            return
+
+        self.kg.lineage_graph.add_node(
+            rel_path,
+            node_type="transformation",
+            source_file=rel_path,
+            transformation_type=node_kind,
+            line_range=[0, 0],
+        )
+
+    def _add_lineage_link(self, source: str, target: str, edge_type: str) -> None:
+        source = self._normalize_rel(source)
+        target = self._normalize_rel(target)
+        self._ensure_lineage_file_node(source, "config")
+        self._ensure_lineage_file_node(target, "config")
+        self.kg.lineage_graph.add_edge(source, target, edge_type=edge_type)
+
+    def _add_module_link(self, source: str, target: str, edge_type: str) -> None:
+        source = self._normalize_rel(source)
+        target = self._normalize_rel(target)
+        if source in self.kg.module_graph and target in self.kg.module_graph:
+            self.kg.module_graph.add_edge(source, target, edge_type=edge_type, weight=1)
+
+    def _find_sql_transform_ids(self, sql_rel_path: str) -> List[str]:
+        sql_rel_path = self._normalize_rel(sql_rel_path)
+        return [
+            txn_id for txn_id, txn in self.kg.transformations.items()
+            if self._normalize_rel(getattr(txn, "source_file", "")) == sql_rel_path
+        ]
+
+    def _extract_source_names(self, sources_yml: Path) -> List[tuple[str, str]]:
+        """Extract (source_name, table_name) pairs from a dbt sources.yml file."""
+        import yaml
+
+        try:
+            content = yaml.safe_load(sources_yml.read_text(encoding="utf-8", errors="replace"))
+            names: List[tuple[str, str]] = []
+            for source in content.get("sources", []) or []:
+                if not isinstance(source, dict):
+                    continue
+                source_name = str(source.get("name", "")).strip()
+                for table in source.get("tables", []) or []:
+                    if not isinstance(table, dict):
+                        continue
+                    table_name = str(table.get("name", "")).strip()
+                    if source_name and table_name:
+                        names.append((source_name, table_name))
+            return names
+        except Exception:
+            return []
+
+    def _link_yaml_to_sql(self) -> None:
+        """
+        Creates graph edges between dbt YAML config files and their related SQL models.
+        Implements three linking rules:
+        1. schema.yml -> sibling .sql files (documented_by)
+        2. sources.yml -> consuming staging .sql files (source_for)
+        3. dbt_project.yml -> all schema/sources YAML files (governs)
+        """
+        model_yaml_files = [
+            p for p in (self.repo_path / "models").rglob("*.yml")
+            if p.is_file()
+        ] if (self.repo_path / "models").exists() else []
+
+        # RULE 1: model YAML to sibling SQL models.
+        # Supports both schema.yml-style files and model-specific YAML like customers.yml.
+        for schema_yml in model_yaml_files:
+            if schema_yml.name == "dbt_project.yml":
+                continue
+
+            sibling_sqls = list(schema_yml.parent.glob("*.sql"))
+            if not sibling_sqls:
+                continue
+
+            # Prefer exact stem match for model-specific YAML, otherwise fall back to all siblings.
+            matched_sqls = [
+                sql_file for sql_file in sibling_sqls
+                if sql_file.stem == schema_yml.stem
+            ]
+            if not matched_sqls and schema_yml.stem in {"schema", "models"}:
+                matched_sqls = sibling_sqls
+
+            yml_rel = self._normalize_rel(schema_yml.relative_to(self.repo_path))
+
+            for sql_file in matched_sqls:
+                sql_rel = self._normalize_rel(sql_file.relative_to(self.repo_path))
+
+                # Module graph link for module visualization
+                self._add_module_link(sql_rel, yml_rel, edge_type="documented_by")
+
+                # Lineage graph link to existing SQL transformations where possible
+                transform_ids = self._find_sql_transform_ids(sql_rel)
+                if transform_ids:
+                    for txn_id in transform_ids:
+                        self._add_lineage_link(txn_id, yml_rel, edge_type="documented_by")
+                else:
+                    self._add_lineage_link(sql_rel, yml_rel, edge_type="documented_by")
+
+        # RULE 2: source-declaring YAML to consuming staging SQL models.
+        # Supports sources.yml as well as dbt patterns like __sources.yml.
+        for sources_yml in model_yaml_files:
+            sources_rel = self._normalize_rel(sources_yml.relative_to(self.repo_path))
+            source_pairs = self._extract_source_names(sources_yml)
+            if not source_pairs:
+                continue
+            sibling_sqls = list(sources_yml.parent.glob("*.sql"))
+
+            for sql_file in sibling_sqls:
+                try:
+                    content = sql_file.read_text(encoding="utf-8", errors="ignore")
+                except OSError:
+                    continue
+
+                sql_rel = self._normalize_rel(sql_file.relative_to(self.repo_path))
+                matched = False
+                for source_name, table_name in source_pairs:
+                    if (
+                        f"source('{source_name}', '{table_name}')" in content
+                        or f'source("{source_name}", "{table_name}")' in content
+                        or ("source(" in content and table_name in content)
+                    ):
+                        matched = True
+                        break
+
+                if not matched:
+                    continue
+
+                self._add_module_link(sources_rel, sql_rel, edge_type="source_for")
+
+                transform_ids = self._find_sql_transform_ids(sql_rel)
+                if transform_ids:
+                    for txn_id in transform_ids:
+                        self._add_lineage_link(sources_rel, txn_id, edge_type="source_for")
+                else:
+                    self._add_lineage_link(sources_rel, sql_rel, edge_type="source_for")
+
+        # RULE 3: dbt_project.yml governs all model YAML files
+        dbt_project = self.repo_path / "dbt_project.yml"
+        if dbt_project.exists():
+            dbt_rel = self._normalize_rel(dbt_project.relative_to(self.repo_path))
+            for yaml_file in model_yaml_files:
+                yml_rel = self._normalize_rel(yaml_file.relative_to(self.repo_path))
+                self._add_module_link(dbt_rel, yml_rel, edge_type="governs")
+                self._add_lineage_link(dbt_rel, yml_rel, edge_type="governs")
 
     def _ensure_datasets(self, names: List[str], storage_type: StorageType) -> None:
         """Add DatasetNodes for any names not already in the graph."""

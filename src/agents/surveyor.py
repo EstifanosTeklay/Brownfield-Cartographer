@@ -19,7 +19,7 @@ from collections import defaultdict
 from src.analyzers.tree_sitter_analyzer import LanguageRouter, detect_language, SKIP_DIRS
 from src.analyzers.git_analyzer import (
     get_file_velocity, get_git_log_summary, get_high_velocity_files,
-    get_last_modified, is_git_repo
+    get_last_modified, get_file_contributor_signals, is_git_repo
 )
 from src.graph.knowledge_graph import KnowledgeGraph
 from src.models.nodes import ModuleNode, FunctionNode, Language
@@ -140,12 +140,27 @@ class Surveyor:
         """
         all_module_paths = set(self.kg.modules.keys())
 
+        # Build dotted-module index for package-style imports.
+        # Example: mage_ai/server/api.py -> mage_ai.server.api
+        dotted_index: Dict[str, str] = {}
+        for module_path in all_module_paths:
+            if not module_path.endswith(".py"):
+                continue
+            dotted = module_path[:-3].replace("/", ".")
+            dotted_index[dotted] = module_path
+            if dotted.endswith(".__init__"):
+                dotted_index[dotted[:-9]] = module_path
+
         for analysis in self._analyses:
             source_path = analysis.get("rel_path", "")
             if analysis.get("language") != Language.PYTHON.value:
                 continue
 
             for imp in analysis.get("imports", []):
+                imp = imp.strip()
+                if not imp:
+                    continue
+
                 if imp.startswith("."):
                     resolved = _resolve_relative_import(imp, source_path)
                     candidates = [
@@ -157,6 +172,12 @@ class Surveyor:
                         Path(imp.replace(".", "/") + ".py"),
                         Path(imp.replace(".", "/") + "/__init__.py"),
                     ]
+
+                    # Direct dotted lookup is often the most reliable for large packages.
+                    direct_target = dotted_index.get(imp)
+                    if direct_target and direct_target in all_module_paths:
+                        self.kg.add_import_edge(source_path, direct_target)
+                        continue
 
                 for candidate in candidates:
                     # Normalize separators before lookup
@@ -180,25 +201,81 @@ class Surveyor:
 
         for path_str, node in self.kg.modules.items():
             v = velocity.get(path_str, 0)
+            last_modified = get_last_modified(self.repo_path, path_str)
+            contrib = get_file_contributor_signals(self.repo_path, path_str, days=90, top_n=3)
+
             node.change_velocity_30d = v
+            node.last_modified = last_modified
+            node.last_author = contrib.get("last_author")
+            node.last_author_email = contrib.get("last_author_email")
+            node.likely_contacts = contrib.get("likely_contacts", [])
             if path_str in self.kg.module_graph:
                 self.kg.module_graph.nodes[path_str]["change_velocity_30d"] = v
+                self.kg.module_graph.nodes[path_str]["last_modified"] = last_modified
+                self.kg.module_graph.nodes[path_str]["last_author"] = node.last_author
+                self.kg.module_graph.nodes[path_str]["last_author_email"] = node.last_author_email
+                self.kg.module_graph.nodes[path_str]["likely_contacts"] = node.likely_contacts
 
     def _detect_dead_code(self) -> None:
         """
-        Mark modules with in_degree==0 and out_degree==0
-        (isolated nodes) as dead code candidates.
+        Mark isolated executable modules as dead code candidates.
+        Avoid flagging SQL/YAML/notebooks/configuration files and lineage-active files.
         """
+        lineage_active_files = {
+            str(txn.source_file).replace("\\", "/")
+            for txn in self.kg.transformations.values()
+            if getattr(txn, "source_file", None)
+        }
+
+        candidate_languages = {
+            Language.PYTHON.value,
+            Language.JAVASCRIPT.value,
+            Language.TYPESCRIPT.value,
+        }
+
         for node_id in self.kg.module_graph.nodes():
             in_deg = self.kg.module_graph.in_degree(node_id)
             out_deg = self.kg.module_graph.out_degree(node_id)
-            if in_deg == 0 and out_deg == 0 and node_id in self.kg.modules:
-                if not any(
-                    node_id.endswith(ep)
-                    for ep in ["__main__.py", "cli.py", "main.py", "app.py", "run.py"]
-                ):
-                    self.kg.modules[node_id].is_dead_code_candidate = True
-                    self.kg.module_graph.nodes[node_id]["is_dead_code_candidate"] = True
+            if node_id not in self.kg.modules:
+                continue
+
+            module = self.kg.modules[node_id]
+            language = getattr(module.language, "value", module.language)
+            language = str(language) if language is not None else Language.OTHER.value
+
+            # Non-executable artifacts should not be dead-code candidates.
+            if language not in candidate_languages:
+                module.is_dead_code_candidate = False
+                self.kg.module_graph.nodes[node_id]["is_dead_code_candidate"] = False
+                continue
+
+            # Files participating in lineage transformations are active by definition.
+            if node_id in lineage_active_files:
+                module.is_dead_code_candidate = False
+                self.kg.module_graph.nodes[node_id]["is_dead_code_candidate"] = False
+                continue
+
+            is_entrypoint = any(
+                node_id.endswith(ep)
+                for ep in ["__main__.py", "cli.py", "main.py", "app.py", "run.py"]
+            )
+
+            # High-confidence dead code only:
+            # isolated + non-entrypoint + no imports + no exports + no recent changes + small file
+            has_no_surface = len(getattr(module, "imports", []) or []) == 0 and len(getattr(module, "exports", []) or []) == 0
+            low_velocity = int(getattr(module, "change_velocity_30d", 0) or 0) == 0
+            small_file = int(getattr(module, "loc", 0) or 0) <= 120
+
+            is_candidate = (
+                in_deg == 0
+                and out_deg == 0
+                and not is_entrypoint
+                and has_no_surface
+                and low_velocity
+                and small_file
+            )
+            module.is_dead_code_candidate = is_candidate
+            self.kg.module_graph.nodes[node_id]["is_dead_code_candidate"] = is_candidate
 
     def _build_configures_edges(self) -> None:
         """

@@ -66,6 +66,61 @@ def get_last_modified(repo_path: Path, file_path: str) -> Optional[str]:
     return output[:10] if output else None  # YYYY-MM-DD
 
 
+def get_file_contributor_signals(
+    repo_path: Path,
+    file_path: str,
+    days: int = 90,
+    top_n: int = 3,
+) -> Dict[str, any]:
+    """
+    Return recent contributor signals for a file.
+    Includes last author and top contributors by commit touches.
+    """
+    since = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+
+    latest_raw = _run_git(
+        ["log", "-1", "--format=%an|%ae", "--", file_path],
+        repo_path,
+    )
+    last_author = None
+    last_author_email = None
+    if latest_raw and "|" in latest_raw:
+        last_author, last_author_email = [part.strip() for part in latest_raw.split("|", 1)]
+
+    contrib_raw = _run_git(
+        ["log", f"--since={since}", "--format=%an|%ae", "--no-merges", "--", file_path],
+        repo_path,
+    )
+
+    counts: Dict[Tuple[str, str], int] = defaultdict(int)
+    if contrib_raw:
+        for line in contrib_raw.splitlines():
+            line = line.strip()
+            if not line or "|" not in line:
+                continue
+            name, email = [part.strip() for part in line.split("|", 1)]
+            counts[(name, email)] += 1
+
+    top = sorted(counts.items(), key=lambda item: item[1], reverse=True)[:top_n]
+    top_contributors = [
+        {
+            "name": name,
+            "email": email,
+            "commits": commit_count,
+        }
+        for (name, email), commit_count in top
+    ]
+
+    likely_contacts = [entry["name"] for entry in top_contributors if entry.get("name")]
+
+    return {
+        "last_author": last_author,
+        "last_author_email": last_author_email,
+        "top_contributors": top_contributors,
+        "likely_contacts": likely_contacts,
+    }
+
+
 def get_high_velocity_files(
     velocity: Dict[str, int],
     top_n: int = 20,

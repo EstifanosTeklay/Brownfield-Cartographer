@@ -41,7 +41,10 @@ def clone_github_repo(url: str) -> Tuple[Path, str]:
 
     # Extract repo name from URL
     # e.g. https://github.com/dbt-labs/jaffle_shop → jaffle_shop
-    parts = url.rstrip("/").rstrip(".git").split("/")
+    normalized_url = url.rstrip("/")
+    if normalized_url.endswith(".git"):
+        normalized_url = normalized_url[:-4]
+    parts = normalized_url.split("/")
     if len(parts) < 5:
         raise ValueError(f"Invalid GitHub URL format: {url}")
 

@@ -82,6 +82,18 @@ class ModuleNode(BaseModel):
         default=None,
         description="ISO date of last git commit touching this file"
     )
+    last_author: Optional[str] = Field(
+        default=None,
+        description="Most recent contributor to touch this file"
+    )
+    last_author_email: Optional[str] = Field(
+        default=None,
+        description="Most recent contributor email if available from git history"
+    )
+    likely_contacts: List[str] = Field(
+        default_factory=list,
+        description="Top recent contributors likely to help with this file"
+    )
     loc: int = Field(default=0, ge=0, description="Lines of code")
     imports: List[str] = Field(
         default_factory=list,

@@ -9,6 +9,7 @@ Four tools:
 """
 from __future__ import annotations
 import os
+import sys
 from pathlib import Path
 from typing import Annotated, Any
 from dotenv import load_dotenv
@@ -306,3 +307,33 @@ def run_navigator(kg: KnowledgeGraph, repo_path: Path) -> None:
         except Exception as e:
             print(f"Error: {e}")
         print()
+
+
+def _main() -> None:
+    if len(sys.argv) < 2:
+        print("Usage: python -m src.agents.navigator <repo_path>")
+        print("Example: python -m src.agents.navigator D:/Projects/jaffle-shop")
+        sys.exit(1)
+
+    repo_path = Path(sys.argv[1]).resolve()
+    if not repo_path.exists():
+        print(f"Error: path does not exist: {repo_path}")
+        sys.exit(1)
+
+    from src.orchestrator import Orchestrator
+
+    print("Loading knowledge graph...")
+    orch = Orchestrator.load_existing(repo_path)
+    kg = orch.get_knowledge_graph()
+
+    stats = kg.stats()
+    if stats.get("modules", 0) == 0 and stats.get("datasets", 0) == 0:
+        print("No analysis artifacts found for this repo.")
+        print(f"Run first: python -m src.cli analyze {repo_path}")
+        sys.exit(1)
+
+    run_navigator(kg, repo_path)
+
+
+if __name__ == "__main__":
+    _main()

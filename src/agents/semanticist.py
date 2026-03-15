@@ -322,12 +322,16 @@ Reply with ONLY the JSON object."""
 
             purpose = self.generate_purpose_statement(module)
             module.purpose_statement = purpose
+            if module.path in self.kg.module_graph:
+                self.kg.module_graph.nodes[module.path]["purpose_statement"] = purpose
 
             # Check doc drift for Python files with docstrings
             if self._language_name(module.language) == Language.PYTHON.value and module.docstring:
                 drift = self.check_doc_drift(module)
                 if drift:
                     module.doc_drift_flag = True
+                    if module.path in self.kg.module_graph:
+                        self.kg.module_graph.nodes[module.path]["doc_drift_flag"] = True
                     self._log(f"Doc drift detected in {module.path}")
 
             if self.verbose and (i + 1) % 5 == 0:
@@ -342,6 +346,8 @@ Reply with ONLY the JSON object."""
         for path, domain in domain_map.items():
             if path in self.kg.modules:
                 self.kg.modules[path].domain_cluster = domain
+                if path in self.kg.module_graph:
+                    self.kg.module_graph.nodes[path]["domain_cluster"] = domain
 
         # Step 3: Answer Day-One questions
         self._log("Answering Five FDE Day-One Questions...")
