@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brownfield Cartographer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #080c14;
+      --bg2:     #0d1424;
+      --bg3:     #121c30;
+      --bg4:     #192440;
+      --border:  #1d3555;
+      --border2: #254470;
+      --cyan:    #00e5ff;
+      --cyan-dim:#0099bb;
+      --green:   #00ffa3;
+      --red:     #ff3d5a;
+      --text:    #dde6f0;
+      --text2:   #7a9ab8;
+      --text3:   #3d5a78;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
+    /* Radial glow */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(0,229,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+
+    /* Hero */
+    .hero { text-align: center; }
+
+    .logo-mark {
+      font-size: 40px;
+      line-height: 1;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 24px rgba(0,229,255,0.4));
+    }
+
+    .logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--cyan);
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .logo em { color: var(--text3); font-style: normal; }
+
+    .tagline {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.65;
+      max-width: 420px;
+      margin: 0 auto;
+      margin-top: 8px;
+    }
+
+    /* Card */
+    .card {
+      width: 100%;
+      background: rgba(13,20,36,0.9);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      backdrop-filter: blur(8px);
+    }
+
+    .card-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
+
+    .url-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .url-input {
+      flex: 1;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 11px 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+      min-width: 0;
+    }
+    .url-input:focus { border-color: var(--cyan); }
+    .url-input::placeholder { color: var(--text3); }
+
+    .btn-primary {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--cyan);
+      color: var(--bg);
+      border: none;
+      border-radius: 7px;
+      padding: 11px 22px;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-primary:hover    { background: var(--cyan-dim); }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .examples {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 2px;
+    }
+    .ex-link {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--text2);
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-color: var(--border2);
+      transition: color 0.15s;
+    }
+    .ex-link:hover { color: var(--cyan); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+      color: var(--text3);
+      font-size: 11px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 1.5px dashed var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.over {
+      border-color: var(--cyan);
+      background: rgba(0,229,255,0.03);
+    }
+    .upload-file-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .upload-icon { font-size: 26px; margin-bottom: 6px; }
+    .upload-text { font-size: 13px; color: var(--text2); }
+    .upload-text span { color: var(--cyan); }
+    .upload-hint {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+
+    /* LLM Toggle */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .toggle-wrap {
+      width: 34px;
+      height: 18px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .toggle-wrap.on { background: var(--cyan); border-color: var(--cyan); }
+    .toggle-knob {
+      width: 12px;
+      height: 12px;
+      background: var(--text2);
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: left 0.15s, background 0.15s;
+    }
+    .toggle-wrap.on .toggle-knob { left: 18px; background: var(--bg); }
+    .toggle-label { font-size: 13px; color: var(--text2); }
+    .toggle-sub   {
+      font-size: 11px;
+      color: var(--text3);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Progress */
+    .progress-card {
+      display: none;
+      width: 100%;
+      background: rgba(13,20,36,0.9);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+    .progress-card.visible { display: block; }
+
+    .prog-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+    .prog-step {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 20px;
+      min-height: 20px;
+    }
+    .prog-bar-wrap {
+      background: var(--bg3);
+      border-radius: 6px;
+      height: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .prog-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan-dim), var(--cyan));
+      border-radius: 6px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+    .prog-pct {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+    }
+    .prog-error {
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 14px;
+      display: none;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div class="content">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="logo-mark">⬡</div>
+    <div class="logo">BROWNFIELD <em>CARTOGRAPHER</em></div>
+    <div class="tagline">
+      Ingest any GitHub repository and generate a living, queryable knowledge graph
+      of its architecture, data lineage, and semantic structure — in minutes.
+    </div>
+  </div>
+
+  <!-- Input card -->
+  <div class="card" id="input-card">
+    <div class="card-label">GitHub URL</div>
+    <div class="url-row">
+      <input class="url-input" id="github-url"
+             placeholder="https://github.com/dbt-labs/jaffle_shop"
+             onkeydown="if(event.key==='Enter') startClone()" />
+      <button class="btn-primary" id="clone-btn" onclick="startClone()">Analyze →</button>
+    </div>
+    <div class="examples">
+      Try:
+      <span class="ex-link" onclick="setUrl('https://github.com/dbt-labs/jaffle_shop')">jaffle_shop</span>
+      ·
+      <span class="ex-link" onclick="setUrl('https://github.com/apache/airflow')">apache/airflow</span>
+    </div>
+
+    <div class="divider">or</div>
+
+    <div class="card-label">Upload ZIP</div>
+    <div class="upload-zone" id="upload-zone"
+         ondragover="onDragOver(event)"
+         ondragleave="onDragLeave(event)"
+         ondrop="onDrop(event)">
+      <input type="file" class="upload-file-input" id="zip-input"
+             accept=".zip" onchange="onFileSelect(event)" />
+      <div class="upload-icon">📦</div>
+      <div class="upload-text"><span>Click to upload</span> or drag & drop</div>
+      <div class="upload-hint">.zip files only</div>
+    </div>
+
+    <div class="toggle-row">
+      <div class="toggle-wrap on" id="llm-toggle" onclick="toggleLLM()">
+        <div class="toggle-knob"></div>
+      </div>
+      <div>
+        <div class="toggle-label">Enable AI analysis</div>
+        <div class="toggle-sub">~$0.03 · ~2 min extra · generates Day-One Brief</div>
+      </div>
+    </div>
+
+    <div class="prog-error" id="error-msg"></div>
+  </div>
+
+  <!-- Progress card -->
+  <div class="progress-card" id="progress-card">
+    <div class="prog-title" id="prog-title">Analyzing Repository…</div>
+    <div class="prog-step" id="prog-step">Initializing…</div>
+    <div class="prog-bar-wrap">
+      <div class="prog-bar-fill" id="prog-fill"></div>
+    </div>
+    <div class="prog-pct" id="prog-pct">0%</div>
+  </div>
+
+</div>
+
+<script>
+  let useLLM      = true;
+  let pollHandle  = null;
+
+  function setUrl(u) { document.getElementById('github-url').value = u; }
+
+  function toggleLLM() {
+    useLLM = !useLLM;
+    document.getElementById('llm-toggle').classList.toggle('on', useLLM);
+  }
+
+  async function startClone() {
+    const url = document.getElementById('github-url').value.trim();
+    if (!url) return;
+    clearError();
+    showProgress('Cloning repository…');
+
+    try {
+      const res  = await fetch('/api/clone', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ url, use_llm: useLLM }),
+      });
+      const data = await res.json();
+      if (data.error) { showError(data.error); return; }
+      if (data.reused) { window.location.href = '/dashboard'; return; }
+      document.getElementById('prog-title').textContent = `Analyzing ${data.repo_name}…`;
+      startPolling();
+    } catch (err) { showError(err.message); }
+  }
+
+  function onFileSelect(ev) {
+    const f = ev.target.files[0];
+    if (f) uploadZip(f);
+  }
+  function onDragOver(ev)  { ev.preventDefault(); document.getElementById('upload-zone').classList.add('over'); }
+  function onDragLeave()   { document.getElementById('upload-zone').classList.remove('over'); }
+  function onDrop(ev) {
+    ev.preventDefault();
+    document.getElementById('upload-zone').classList.remove('over');
+    const f = ev.dataTransfer.files[0];
+    if (f && f.name.endsWith('.zip')) uploadZip(f);
+    else showError('Please upload a .zip file.');
+  }
+
+  async function uploadZip(file) {
+    clearError();
+    showProgress(`Uploading ${file.name}…`);
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('use_llm', useLLM);
+    try {
+      const res  = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.error) { showError(data.error); return; }
+      if (data.reused) { window.location.href = '/dashboard'; return; }
+      document.getElementById('prog-title').textContent = `Analyzing ${data.repo_name}…`;
+      startPolling();
+    } catch (err) { showError(err.message); }
+  }
+
+  function showProgress(step) {
+    document.getElementById('input-card').style.display = 'none';
+    document.getElementById('progress-card').classList.add('visible');
+    document.getElementById('prog-step').textContent = step;
+    setProg(5);
+  }
+
+  function setProg(pct, step) {
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-pct').textContent  = pct + '%';
+    if (step) document.getElementById('prog-step').textContent = step;
+  }
+
+  function startPolling() {
+    pollHandle = setInterval(async () => {
+      try {
+        const res    = await fetch('/api/analysis_status');
+        const status = await res.json();
+        setProg(status.progress, status.step);
+        if (status.done)  { clearInterval(pollHandle); window.location.href = '/dashboard'; }
+        if (status.error) { clearInterval(pollHandle); showError(status.error); }
+      } catch (_) { /* keep polling */ }
+    }, 1000);
+  }
+
+  function showError(msg) {
+    if (pollHandle) clearInterval(pollHandle);
+    document.getElementById('input-card').style.display   = 'block';
+    document.getElementById('progress-card').classList.remove('visible');
+    const el = document.getElementById('error-msg');
+    el.textContent  = '⚠ ' + msg;
+    el.style.display = 'block';
+  }
+
+  function clearError() {
+    const el = document.getElementById('error-msg');
+    el.textContent  = '';
+    el.style.display = 'none';
+  }
+</script>
+</body>
+</html>
